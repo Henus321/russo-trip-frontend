@@ -1,11 +1,11 @@
 import { API_URL } from "@/constants";
-import { IError, IUserData } from "@/models";
+import { IMessage, IUserData } from "@/models";
 import cookie from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<IUserData | IError>
+  res: NextApiResponse<IUserData | IMessage>
 ) {
   if (req.method === "POST") {
     const { username, email, password } = req.body;

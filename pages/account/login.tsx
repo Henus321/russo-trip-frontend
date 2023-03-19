@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite";
 
 function LoginPage() {
   const { authStore } = useStores();
-  const { user, loginForm, setLoginForm, login } = authStore;
+  const { user, loginForm, isLoading, setLoginForm, login } = authStore;
 
   const { email, password } = loginForm;
 
@@ -56,7 +56,10 @@ function LoginPage() {
             onChange={onChange}
           />
         </div>
-        <button className="bg-slate-600 py-2 px-4 my-2 text-white">
+        <button
+          disabled={isLoading}
+          className="bg-slate-600 py-2 px-4 my-2 text-white disabled:bg-gray-300"
+        >
           Submit
         </button>
       </form>

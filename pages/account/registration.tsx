@@ -10,8 +10,13 @@ import Layout from "@/components/Layout";
 
 function RegistrationPage() {
   const { authStore } = useStores();
-  const { user, registrationForm, setRegistrationForm, registration } =
-    authStore;
+  const {
+    user,
+    registrationForm,
+    isLoading,
+    setRegistrationForm,
+    registration,
+  } = authStore;
 
   const { username, email, password, passwordConfirm } = registrationForm;
 
@@ -86,7 +91,10 @@ function RegistrationPage() {
             onChange={onChange}
           />
         </div>
-        <button className="bg-slate-600 py-2 px-4 my-2 text-white">
+        <button
+          disabled={isLoading}
+          className="bg-slate-600 py-2 px-4 my-2 text-white disabled:bg-gray-300"
+        >
           Submit
         </button>
       </form>

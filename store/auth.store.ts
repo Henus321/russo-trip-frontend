@@ -8,6 +8,8 @@ class authStore {
   rootStore: RootStore;
 
   user: IUser | null = null;
+  isLoading: boolean = false;
+
   registrationForm: IRegistrationForm = {
     username: "",
     email: "",
@@ -24,19 +26,40 @@ class authStore {
     makeAutoObservable(this);
   }
 
-  setUser = (user: IUser) => {
+  setUser = (user: IUser | null) => {
     this.user = user;
+  };
+
+  setLoading = (status: boolean) => {
+    this.isLoading = status;
   };
 
   setRegistrationForm = (formData: IRegistrationForm) => {
     this.registrationForm = { ...formData };
   };
 
+  resetRegistrationForm = () => {
+    this.registrationForm = {
+      username: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    };
+  };
+
   setLoginForm = (formData: ILoginForm) => {
     this.loginForm = { ...formData };
   };
 
+  resetLoginForm = () => {
+    this.loginForm = {
+      email: "",
+      password: "",
+    };
+  };
+
   registration = async (formData: IRegistrationForm) => {
+    this.setLoading(true);
     const response = await fetch(`${NEXT_URL}/api/registration`, {
       method: "POST",
       headers: {
@@ -49,12 +72,15 @@ class authStore {
 
     if (response.ok) {
       this.setUser(data.user);
+      this.resetRegistrationForm();
     } else {
       toast.error(data.message);
     }
+    this.setLoading(false);
   };
 
   login = async ({ email: identifier, password }: ILoginForm) => {
+    this.setLoading(true);
     const response = await fetch(`${NEXT_URL}/api/login`, {
       method: "POST",
       headers: {
@@ -67,9 +93,36 @@ class authStore {
 
     if (response.ok) {
       this.setUser(data.user);
+      this.resetLoginForm();
     } else {
       toast.error(data.message);
     }
+    this.setLoading(false);
+  };
+
+  logout = async () => {
+    this.setLoading(true);
+    const response = await fetch(`${NEXT_URL}/api/logout`, {
+      method: "POST",
+    });
+
+    if (response.ok) {
+      this.setUser(null);
+    }
+    this.setLoading(false);
+  };
+
+  checkUser = async () => {
+    this.setLoading(true);
+    const response = await fetch(`${NEXT_URL}/api/user`);
+    const data = await response.json();
+
+    if (response.ok) {
+      this.setUser(data.user);
+    } else {
+      this.setUser(null);
+    }
+    this.setLoading(false);
   };
 }
 
