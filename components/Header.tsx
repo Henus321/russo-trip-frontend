@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { observer } from "mobx-react-lite";
 import { FaHippo } from "react-icons/fa";
 
-export default function Header() {
+function Header() {
   return (
     <header className="bg-blue-900 text-white shadow w-full">
       <div className="container mx-auto flex flex-row p-5 items-center justify-between">
@@ -26,3 +27,5 @@ export default function Header() {
     </header>
   );
 }
+
+export default observer(Header);
