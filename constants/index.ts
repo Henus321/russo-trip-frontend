@@ -1,3 +1,6 @@
+export * from "./config";
+export * from "./notifications";
+
 export const posts = [
   {
     title: "Moscow trip",

@@ -1,7 +1,12 @@
 import Link from "next/link";
+import { observer } from "mobx-react-lite";
 import { FaHippo } from "react-icons/fa";
+import { useStores } from "@/store";
 
-export default function Header() {
+function Header() {
+  const { authStore } = useStores();
+  const { user, logout } = authStore;
+
   return (
     <header className="bg-blue-900 text-white shadow w-full">
       <div className="container mx-auto flex flex-row p-5 items-center justify-between">
@@ -17,12 +22,20 @@ export default function Header() {
             <li>
               <Link href="/about">About</Link>
             </li>
-            <li>
-              <Link href="/account/login">Login</Link>
-            </li>
+            {user ? (
+              <li>
+                <button onClick={() => logout()}>Logout</button>
+              </li>
+            ) : (
+              <li>
+                <Link href="/account/login">Login</Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
     </header>
   );
 }
+
+export default observer(Header);

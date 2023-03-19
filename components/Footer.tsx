@@ -1,4 +1,4 @@
-export default function Header() {
+export default function Footer() {
   return (
     <footer className="bg-blue-900 text-white shadow w-full mt-auto">
       <div className="container mx-auto flex flex-row p-5 items-center justify-between">
