@@ -1,10 +1,13 @@
-import { posts } from "@/constants";
+import { API_URL } from "@/constants";
+import { IPost } from "@/models";
+import { GetStaticProps } from "next";
+import { convertDataToPosts } from "@/helpers";
 import Link from "next/link";
 
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
 
-export default function BlogPage() {
+export default function BlogPage({ posts }: { posts: IPost[] }) {
   const cities = posts.map(({ city }) => city);
   const uniqueCities = [...new Set(cities)];
 
@@ -21,6 +24,7 @@ export default function BlogPage() {
         </div>
         <div className="w-1/4">
           <div className="flex flex-col w-full p-4 text-white text-xl bg-cyan-900">
+            <Link href="/blog">no-filter</Link>
             {uniqueCities.map((city) => (
               <Link href={`/blog/city/${city.toLowerCase()}`} key={city}>
                 {city}
@@ -32,3 +36,17 @@ export default function BlogPage() {
     </Layout>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await fetch(`${API_URL}/api/posts?populate=*`);
+  const { data } = await response.json();
+
+  const posts: IPost[] = convertDataToPosts(data);
+
+  return {
+    props: {
+      posts,
+    },
+    revalidate: 1,
+  };
+};
