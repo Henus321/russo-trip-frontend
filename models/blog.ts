@@ -15,3 +15,15 @@ export interface IPost {
   id: number;
   image: IImage;
 }
+
+export interface IComment {
+  createdAt: string;
+  body: string;
+  author: string;
+  id: number;
+}
+
+export interface INewComment {
+  body: string;
+  post: number;
+}

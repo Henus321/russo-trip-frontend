@@ -1,7 +1,7 @@
 export interface IUser {
   username: string;
   email: string;
-  id: string;
+  id: number;
 }
 
 export interface IUserData {

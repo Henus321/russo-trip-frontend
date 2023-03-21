@@ -7,15 +7,13 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
 
-export default function CityBlogPage({
-  cityName,
-  cities,
-  posts,
-}: {
+interface Props {
   cityName: string;
   cities: string[];
   posts: IPost[];
-}) {
+}
+
+export default function CityBlogPage({ cityName, cities, posts }: Props) {
   return (
     <Layout>
       <div className="flex justify-between">

@@ -1,20 +1,26 @@
 import { API_URL } from "@/constants";
-import { IPost } from "@/models";
-import { GetStaticPaths, GetStaticProps } from "next";
-import { convertDataToPosts } from "@/helpers";
+import { IData, IPost } from "@/models";
+import { GetServerSideProps } from "next";
+import { convertDataToPosts, parseCookies } from "@/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import qs from "qs";
 
 import Layout from "@/components/Layout";
+import Comments from "@/components/Comments";
 
-export default function PostPage({ post }: { post: IPost }) {
-  const { slug, city, image, title, description, date, author } = post;
+interface Props {
+  post: IPost;
+  jwt: string;
+}
+
+export default function PostPage({ post, jwt }: Props) {
+  const { city, image, title, description, date, author, id } = post;
 
   return (
     <Layout>
       <Link href="/blog">Go Back</Link>
-      <h1 className="text-5xl font-bold">{slug}</h1>
+      <h1 className="text-5xl font-bold">{title}</h1>
       <span className="text-2xl">{city}</span>
       <div className="relative h-96 w-full my-2">
         <Image
@@ -28,58 +34,47 @@ export default function PostPage({ post }: { post: IPost }) {
         />
       </div>
       <div className="flex">
-        <div className="flex flex-col w-1/2">
+        <div className="flex flex-col w-full">
           <p className="mb-2">{description}</p>
-        </div>
-        <div className="flex flex-col justify-center items-center h-96 bg-slate-100 w-1/2">
-          <h2>Map?</h2>
         </div>
       </div>
       <div className="flex justify-between mb-2">
         <span>{date}</span>
-        <span>{author}</span>
+        <span>Author: {author}</span>
       </div>
-      <div className="flex flex-col justify-center items-center h-96 bg-slate-100 w-full">
-        <h2>Comments Section</h2>
-      </div>
+      <Comments postId={id} jwt={jwt} />
     </Layout>
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch(`${API_URL}/api/posts`);
-  const { data } = await response.json();
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+}) => {
+  const { jwt } = parseCookies(req);
 
-  const posts: IPost[] = convertDataToPosts(data);
-
-  const paths = posts.map(({ slug }) => ({
-    params: { slug },
-  }));
-
-  return {
-    paths,
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const query = qs.stringify({
+  const postsQuery = qs.stringify({
     filters: {
       slug: {
         $eq: params?.slug,
       },
     },
+    populate: {
+      user: "user",
+      image: {
+        populate: "*",
+      },
+    },
   });
-  const response = await fetch(`${API_URL}/api/posts?populate=*&${query}`);
 
-  const { data } = await response.json();
-
-  const posts: IPost[] = convertDataToPosts(data);
+  const postsResponse = await fetch(`${API_URL}/api/posts?${postsQuery}`);
+  const { data }: { data: IData[] } = await postsResponse.json();
+  const post: IPost = convertDataToPosts(data)[0];
 
   return {
     props: {
-      post: posts[0],
+      post,
+      jwt,
     },
-    revalidate: 1,
   };
 };

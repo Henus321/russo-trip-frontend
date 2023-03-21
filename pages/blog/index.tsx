@@ -7,7 +7,11 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
 
-export default function BlogPage({ posts }: { posts: IPost[] }) {
+interface Props {
+  posts: IPost[];
+}
+
+export default function BlogPage({ posts }: Props) {
   const cities = posts.map(({ city }) => city);
   const uniqueCities = [...new Set(cities)];
 

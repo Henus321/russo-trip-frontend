@@ -7,7 +7,11 @@ import { convertDataToPosts } from "@/helpers";
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
 
-export default function HomePage({ posts }: { posts: IPost[] }) {
+interface Props {
+  posts: IPost[];
+}
+
+export default function HomePage({ posts }: Props) {
   return (
     <Layout>
       <h1 className="text-5xl border-b-4 p-5 font-bold">Home Page</h1>
