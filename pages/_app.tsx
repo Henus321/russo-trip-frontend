@@ -7,9 +7,8 @@ import "@/styles/globals.css";
 import { useEffect } from "react";
 
 function App({ Component, pageProps }: AppProps) {
-  const {
-    authStore: { checkUser },
-  } = useStores();
+  const { authStore } = useStores();
+  const { checkUser } = authStore;
 
   useEffect(() => {
     checkUser();

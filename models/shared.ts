@@ -1,3 +1,8 @@
 export interface IMessage {
-  message: string;
+  message?: string;
+}
+
+export interface IData {
+  id: number;
+  attributes: any;
 }

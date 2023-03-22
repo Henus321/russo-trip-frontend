@@ -1,10 +1,17 @@
 import Link from "next/link";
-import { posts } from "@/constants";
+import { API_URL } from "@/constants";
+import { IPost } from "@/models";
+import { GetStaticProps } from "next";
+import { convertDataToPosts } from "@/helpers";
 
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
 
-export default function HomePage() {
+interface Props {
+  posts: IPost[];
+}
+
+export default function HomePage({ posts }: Props) {
   return (
     <Layout>
       <h1 className="text-5xl border-b-4 p-5 font-bold">Home Page</h1>
@@ -22,3 +29,19 @@ export default function HomePage() {
     </Layout>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await fetch(
+    `${API_URL}/api/posts?populate=*&sort=date:desc`
+  );
+  const { data } = await response.json();
+
+  const posts: IPost[] = convertDataToPosts(data);
+
+  return {
+    props: {
+      posts,
+    },
+    revalidate: 1,
+  };
+};

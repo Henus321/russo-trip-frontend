@@ -1,11 +1,14 @@
 import { createContext, useContext } from "react";
 import AuthStore from "./auth.store";
+import CommentsStore from "./comments.store";
 
 export class RootStore {
   authStore: AuthStore;
+  commentsStore: CommentsStore;
 
   constructor() {
     this.authStore = new AuthStore(this);
+    this.commentsStore = new CommentsStore(this);
   }
 }
 
