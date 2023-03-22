@@ -1,5 +1,10 @@
-import { NEXT_URL } from "@/constants";
-import { ILoginForm, IRegistrationForm, IUser } from "@/models";
+import { COMMON_SUCCESS_MESSAGE, NEXT_URL } from "@/constants";
+import {
+  IChangePasswordForm,
+  ILoginForm,
+  IRegistrationForm,
+  IUser,
+} from "@/models";
 import { makeAutoObservable } from "mobx";
 import { toast } from "react-toastify";
 import { RootStore } from ".";
@@ -8,7 +13,7 @@ class authStore {
   rootStore: RootStore;
 
   user: IUser | null = null;
-  isLoading: boolean = false;
+  isLoading: boolean = true;
 
   registrationForm: IRegistrationForm = {
     username: "",
@@ -19,6 +24,11 @@ class authStore {
   loginForm: ILoginForm = {
     email: "",
     password: "",
+  };
+  changePasswordForm: IChangePasswordForm = {
+    currentPassword: "",
+    password: "",
+    passwordConfirmation: "",
   };
 
   constructor(rootStore: RootStore) {
@@ -37,7 +47,6 @@ class authStore {
   setRegistrationForm = (formData: IRegistrationForm) => {
     this.registrationForm = { ...formData };
   };
-
   resetRegistrationForm = () => {
     this.registrationForm = {
       username: "",
@@ -50,11 +59,21 @@ class authStore {
   setLoginForm = (formData: ILoginForm) => {
     this.loginForm = { ...formData };
   };
-
   resetLoginForm = () => {
     this.loginForm = {
       email: "",
       password: "",
+    };
+  };
+
+  setChangePasswordForm = (formData: IChangePasswordForm) => {
+    this.changePasswordForm = { ...formData };
+  };
+  resetChangePasswordForm = () => {
+    this.changePasswordForm = {
+      currentPassword: "",
+      password: "",
+      passwordConfirmation: "",
     };
   };
 
@@ -121,6 +140,28 @@ class authStore {
       this.setUser(data.user);
     } else {
       this.setUser(null);
+    }
+    this.setLoading(false);
+  };
+
+  changePassword = async (formData: IChangePasswordForm) => {
+    this.setLoading(true);
+    const response = await fetch(`${NEXT_URL}/api/change-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...formData }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      this.setUser(data.user);
+      this.resetChangePasswordForm();
+      toast.error(COMMON_SUCCESS_MESSAGE);
+    } else {
+      toast.success(data.message);
     }
     this.setLoading(false);
   };

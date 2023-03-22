@@ -34,8 +34,7 @@ function Comments({ postId, jwt }: Props) {
       }
       resetComments();
     };
-    // eslint-disable-next-line
-  }, []);
+  }, [resetComments]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
