@@ -10,6 +10,7 @@ export interface IPost {
   city: string;
   date: string;
   description: string;
+  markdown: string;
   author: string;
   slug: string;
   id: number;

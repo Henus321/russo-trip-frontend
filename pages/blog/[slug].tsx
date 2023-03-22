@@ -1,6 +1,7 @@
 import { API_URL } from "@/constants";
 import { IData, IPost } from "@/models";
 import { GetServerSideProps } from "next";
+import { marked } from "marked";
 import { convertDataToPosts, parseCookies } from "@/helpers";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export default function PostPage({ post, jwt }: Props) {
-  const { city, image, title, description, date, author, id } = post;
+  const { city, image, title, markdown, date, author, id } = post;
 
   return (
     <Layout>
@@ -33,10 +34,11 @@ export default function PostPage({ post, jwt }: Props) {
           priority
         />
       </div>
-      <div className="flex">
-        <div className="flex flex-col w-full">
-          <p className="mb-2">{description}</p>
-        </div>
+      <div className="flex flex-col w-full">
+        <div
+          className="markdown"
+          dangerouslySetInnerHTML={{ __html: marked(markdown) }}
+        ></div>
       </div>
       <div className="flex justify-between mb-2">
         <span>{date}</span>

@@ -14,6 +14,7 @@ function Comments({ postId, jwt }: Props) {
     comments,
     fetch,
     commentMessage,
+    isLoading,
     setCommentMessage,
     fetchComments,
     addComment,
@@ -48,8 +49,9 @@ function Comments({ postId, jwt }: Props) {
   return (
     <div className="flex flex-col justify-center items-center bg-slate-100 w-full p-4">
       <h2 className="text-2xl font-bold">Comments</h2>
-      {/* + !isLoading, to avoid no comments on fetch pending */}
-      {comments && comments.length > 0 ? (
+      {!isLoading &&
+        comments &&
+        comments.length > 0 &&
         comments.map((comment) => (
           <span key={`${comment.id}${comment.author}`}>
             {comment.id}
@@ -60,8 +62,8 @@ function Comments({ postId, jwt }: Props) {
             {" - "}
             {comment.createdAt}
           </span>
-        ))
-      ) : (
+        ))}
+      {!isLoading && comments && comments.length === 0 && (
         <span>No comments</span>
       )}
       {user ? (
