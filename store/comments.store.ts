@@ -18,7 +18,7 @@ class commentsStore {
 
   comments: IComment[] | null = null;
   commentMessage: string = "";
-  fetch: boolean = false;
+  reFetch: boolean = false;
   isLoading: boolean = false;
 
   constructor(rootStore: RootStore) {
@@ -35,7 +35,7 @@ class commentsStore {
   };
 
   setFetch = (status: boolean) => {
-    this.fetch = status;
+    this.reFetch = status;
   };
 
   setLoading = (status: boolean) => {
@@ -61,9 +61,9 @@ class commentsStore {
     });
     const response = await fetch(`${API_URL}/api/comments?${commentsQuery}`);
     const { data }: { data: IData[] } = await response.json();
-    const comments: IComment[] = convertDataToComments(data);
-
+    
     if (response.ok) {
+      const comments: IComment[] = convertDataToComments(data);
       this.setComments(comments);
     } else {
       toast.error(FAIL_FETCH_MESSAGE);
@@ -81,6 +81,7 @@ class commentsStore {
       toast.error(EMPTY_MESSAGE);
       return;
     }
+    this.setLoading(true);
 
     const commentData: INewComment = {
       body: comment,
@@ -99,13 +100,15 @@ class commentsStore {
     if (!response.ok) {
       if (response.status === 403 || response.status === 401) {
         toast.error(NO_TOKEN_MESSAGE);
+        this.setLoading(false);
         return;
       }
       toast.error(COMMON_ERROR_MESSAGE);
     } else {
-      this.setFetch(!this.fetch);
+      this.setFetch(!this.reFetch);
       this.setCommentMessage("");
     }
+    this.setLoading(false);
   };
 }
 

@@ -159,7 +159,7 @@ class authStore {
     if (response.ok) {
       this.setUser(data.user);
       this.resetChangePasswordForm();
-      toast.error(COMMON_SUCCESS_MESSAGE);
+      toast.success(COMMON_SUCCESS_MESSAGE);
     } else {
       toast.success(data.message);
     }
