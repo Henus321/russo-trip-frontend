@@ -1,3 +1,5 @@
+import { IUser } from "./auth";
+
 export interface IImage {
   thumbnail: string;
   small: string;
@@ -27,4 +29,16 @@ export interface IComment {
 export interface INewComment {
   body: string;
   post: number;
+}
+
+export interface IBookmark {
+  id: number;
+  user: number;
+  slug: string;
+}
+
+export interface INewBookmark {
+  jwt: string;
+  slug: string;
+  user: IUser | null;
 }

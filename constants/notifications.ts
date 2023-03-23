@@ -1,5 +1,7 @@
 export const COMMON_ERROR_MESSAGE = "Something went wrong...";
 
+export const COMMON_SUCCESS_MESSAGE = "Success!";
+
 export const PASSWORD_MATCH_MESSAGE = "Passwords do not match";
 
 export const NOT_AUTHORIZED_MESSAGE = "You are not authorized";

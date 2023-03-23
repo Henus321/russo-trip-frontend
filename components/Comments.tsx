@@ -12,7 +12,7 @@ function Comments({ postId, jwt }: Props) {
   const { user } = authStore;
   const {
     comments,
-    fetch,
+    reFetch,
     commentMessage,
     isLoading,
     setCommentMessage,
@@ -23,7 +23,7 @@ function Comments({ postId, jwt }: Props) {
 
   useEffect(() => {
     fetchComments(postId);
-  }, [fetchComments, postId, fetch]);
+  }, [fetchComments, postId, reFetch]);
 
   const firstUpdate = useRef(true);
   useEffect(() => {
@@ -34,8 +34,7 @@ function Comments({ postId, jwt }: Props) {
       }
       resetComments();
     };
-    // eslint-disable-next-line
-  }, []);
+  }, [resetComments]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,8 +48,7 @@ function Comments({ postId, jwt }: Props) {
   return (
     <div className="flex flex-col justify-center items-center bg-slate-100 w-full p-4">
       <h2 className="text-2xl font-bold">Comments</h2>
-      {!isLoading &&
-        comments &&
+      {comments &&
         comments.length > 0 &&
         comments.map((comment) => (
           <span key={`${comment.id}${comment.author}`}>

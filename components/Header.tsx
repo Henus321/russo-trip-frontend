@@ -5,7 +5,7 @@ import { useStores } from "@/store";
 
 function Header() {
   const { authStore } = useStores();
-  const { user, logout } = authStore;
+  const { user } = authStore;
 
   return (
     <header className="bg-blue-900 text-white shadow w-full">
@@ -24,7 +24,7 @@ function Header() {
             </li>
             {user ? (
               <li>
-                <button onClick={() => logout()}>Logout</button>
+                <Link href="/account/profile">Profile</Link>
               </li>
             ) : (
               <li>

@@ -1,5 +1,5 @@
 import { API_URL } from "@/constants";
-import { IComment, IData, IPost } from "@/models";
+import { IBookmark, IComment, IData, IPost } from "@/models";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
 
@@ -34,4 +34,14 @@ export const convertDataToComments = (data: IData[]): IComment[] => {
   }));
 
   return comments;
+};
+
+export const convertDataToBookmarks = (data: IData[]): IBookmark[] => {
+  const bookmark: IBookmark[] = data.map((book) => ({
+    user: book.attributes.user.data.id,
+    slug: book.attributes.slug,
+    id: book.id,
+  }));
+
+  return bookmark;
 };

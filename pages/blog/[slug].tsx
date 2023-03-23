@@ -9,6 +9,7 @@ import qs from "qs";
 
 import Layout from "@/components/Layout";
 import Comments from "@/components/Comments";
+import Bookmark from "@/components/Bookmark";
 
 interface Props {
   post: IPost;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export default function PostPage({ post, jwt }: Props) {
-  const { city, image, title, markdown, date, author, id } = post;
+  const { city, image, title, markdown, date, author, id, slug } = post;
 
   return (
     <Layout>
@@ -34,6 +35,7 @@ export default function PostPage({ post, jwt }: Props) {
           priority
         />
       </div>
+      <Bookmark jwt={jwt} postSlug={slug} />
       <div className="flex flex-col w-full">
         <div
           className="markdown"
