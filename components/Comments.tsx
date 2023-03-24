@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
+import Comment from "./Comment";
 
 interface Props {
   postId: number;
@@ -42,37 +43,45 @@ function Comments({ postId, jwt }: Props) {
     addComment(commentMessage, postId, jwt);
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setCommentMessage(e.target.value);
 
   return (
-    <div className="flex flex-col justify-center items-center bg-slate-100 w-full p-4">
-      <h2 className="text-2xl font-bold">Comments</h2>
+    <div className="flex flex-col bg-slate-100 w-full px-4 py-6 shadow-md">
+      <h2 className="text-3xl text-center font-bold underline mb-6">
+        Комментарии
+      </h2>
       {comments &&
         comments.length > 0 &&
         comments.map((comment) => (
-          <span key={`${comment.id}${comment.author}`}>
-            {comment.id}
-            {". "}
-            {comment.body}
-            {" - "}
-            {comment.author}
-            {" - "}
-            {comment.createdAt}
-          </span>
+          <Comment key={`${comment.id}${comment.author}`} comment={comment} />
         ))}
       {!isLoading && comments && comments.length === 0 && (
-        <span>No comments</span>
+        <div className="flex flex-col mb-10 mt-6 mx-auto">
+          <span>Нет комментариев...</span>
+        </div>
       )}
       {user ? (
         <form onSubmit={(e) => onSubmit(e)} className="flex flex-col w-full">
-          <label>Comment</label>
-          <input
+          <label className="mb-1" htmlFor="comment">
+            Новый комментарий
+          </label>
+          <textarea
+            className="bg-white shadow-sm py-1 px-2 mb-6 outline-none resize-none"
             value={commentMessage}
             onChange={(e) => onChange(e)}
-            type="text"
+            id="comment"
+            rows={5}
+            cols={30}
+            maxLength={250}
+            placeholder="Введите текст..."
           />
-          <button className="bg-slate-500 px-3 py-1 self-center">post</button>
+          <button
+            disabled={isLoading}
+            className="bg-slate-800 text-white shadow-sm text-xl px-4 py-1 self-center disabled:text-gray-400 hover:bg-slate-900 active:text-slate-200"
+          >
+            Отправить
+          </button>
         </form>
       ) : (
         <></>

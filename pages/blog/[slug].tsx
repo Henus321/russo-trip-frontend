@@ -2,14 +2,22 @@ import { API_URL } from "@/constants";
 import { IData, IPost } from "@/models";
 import { GetServerSideProps } from "next";
 import { marked } from "marked";
-import { convertDataToPosts, parseCookies } from "@/helpers";
+import {
+  beatifyDate,
+  capitalizeFirstLetter,
+  convertDataToPosts,
+  parseCookies,
+} from "@/helpers";
+import { useRouter } from "next/router";
+import { FaArrowLeft } from "react-icons/fa";
+import { useStores } from "@/store";
 import Image from "next/image";
-import Link from "next/link";
 import qs from "qs";
 
 import Layout from "@/components/Layout";
 import Comments from "@/components/Comments";
 import Bookmark from "@/components/Bookmark";
+import PageTitle from "@/components/PageTitle";
 
 interface Props {
   post: IPost;
@@ -17,16 +25,30 @@ interface Props {
 }
 
 export default function PostPage({ post, jwt }: Props) {
-  const { city, image, title, markdown, date, author, id, slug } = post;
+  const { city, image, title, markdown, date, author, id } = post;
+  const { authStore } = useStores();
+  const { user } = authStore;
+
+  const formattedDate = beatifyDate(date);
+
+  const router = useRouter();
+
+  const onClick = () => {
+    router.back();
+  };
 
   return (
     <Layout>
-      <Link href="/blog">Go Back</Link>
-      <h1 className="text-5xl font-bold">{title}</h1>
-      <span className="text-2xl">{city}</span>
-      <div className="relative h-96 w-full my-2">
+      <button className="flex items-center underline" onClick={() => onClick()}>
+        <FaArrowLeft className="mr-2" /> Назад
+      </button>
+      <PageTitle>
+        {title}
+        <span className="text-xl">{capitalizeFirstLetter(city)}</span>
+      </PageTitle>
+      <div className="relative w-full h-[40rem] my-2">
         <Image
-          className="mb-2 contain object-cover"
+          className="block mb-2 object-cover"
           src={image.large}
           alt={title}
           fill
@@ -35,16 +57,14 @@ export default function PostPage({ post, jwt }: Props) {
           priority
         />
       </div>
-      <Bookmark jwt={jwt} postSlug={slug} />
-      <div className="flex flex-col w-full">
-        <div
-          className="markdown"
-          dangerouslySetInnerHTML={{ __html: marked(markdown) }}
-        ></div>
-      </div>
+      {user && <Bookmark jwt={jwt} post={post} />}
+      <div
+        className="markdown flex flex-col w-full mb-2"
+        dangerouslySetInnerHTML={{ __html: marked(markdown) }}
+      ></div>
       <div className="flex justify-between mb-2">
-        <span>{date}</span>
-        <span>Author: {author}</span>
+        <span>{formattedDate}</span>
+        <span>Автор: {capitalizeFirstLetter(author)}</span>
       </div>
       <Comments postId={id} jwt={jwt} />
     </Layout>
@@ -66,6 +86,9 @@ export const getServerSideProps: GetServerSideProps = async ({
     populate: {
       user: "user",
       image: {
+        populate: "*",
+      },
+      post: {
         populate: "*",
       },
     },

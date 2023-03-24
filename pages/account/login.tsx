@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useStores } from "@/store";
+import { observer } from "mobx-react-lite";
 import Link from "next/link";
 
 import Layout from "@/components/Layout";
-import { observer } from "mobx-react-lite";
+import PageTitle from "@/components/PageTitle";
 
 function LoginPage() {
   const { authStore } = useStores();
@@ -32,43 +33,50 @@ function LoginPage() {
 
   return (
     <Layout>
-      <h1 className="text-5xl border-b-4 p-5 font-bold">Login Page</h1>
-      <form onSubmit={onSubmit}>
-        <div className="flex flex-col my-2">
-          <label>Email</label>
+      <PageTitle>Вход</PageTitle>
+      <div className="flex flex-col w-1/2">
+        <form
+          className="flex flex-col bg-slate-100 py-6 px-4 shadow-md"
+          onSubmit={onSubmit}
+        >
+          <label className="mb-1" htmlFor="email">
+            Почта
+          </label>
           <input
-            className="bg-slate-200 outline-none p-2"
+            className="bg-white shadow-sm py-1 px-2 mb-2 outline-none"
             required
+            disabled={isLoading}
             type="email"
             id="email"
             value={email}
             onChange={onChange}
           />
-        </div>
-        <div className="flex flex-col my-2">
-          <label>Password</label>
+          <label className="mb-1" htmlFor="password">
+            Пароль
+          </label>
           <input
-            className="bg-slate-200 outline-none p-2"
+            className="bg-white shadow-sm py-1 px-2 mb-4 outline-none"
             required
+            disabled={isLoading}
             type="password"
             id="password"
             value={password}
             onChange={onChange}
           />
-        </div>
-        <button
-          disabled={isLoading}
-          className="bg-slate-600 py-2 px-4 my-2 text-white disabled:bg-gray-300"
-        >
-          Submit
-        </button>
-      </form>
-      <p>
-        Don&apos;t have an account?{" "}
-        <Link className="text-red-500" href="/account/registration">
-          Registration
-        </Link>
-      </p>
+          <button
+            className="bg-slate-800 text-white py-2 text-xl disabled:text-gray-400 hover:bg-slate-900 active:text-slate-200 mb-2"
+            disabled={isLoading}
+          >
+            Войти
+          </button>
+          <p className="text-center">
+            Нет аккаунта?{" "}
+            <Link className="underline font-bold" href="/account/registration">
+              Регистрация
+            </Link>
+          </p>
+        </form>
+      </div>
     </Layout>
   );
 }

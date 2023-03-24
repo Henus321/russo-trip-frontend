@@ -1,38 +1,43 @@
 import Link from "next/link";
 import { observer } from "mobx-react-lite";
-import { FaHippo } from "react-icons/fa";
+import { FaMountain } from "react-icons/fa";
 import { useStores } from "@/store";
+
+import Search from "./Search";
 
 function Header() {
   const { authStore } = useStores();
   const { user } = authStore;
 
   return (
-    <header className="bg-blue-900 text-white shadow w-full">
+    <header className="bg-slate-800 text-white shadow w-full">
       <div className="container mx-auto flex flex-row p-5 items-center justify-between">
-        <Link className="flex items-center" href="/">
-          <FaHippo className="text-2xl mr-2" />
-          <span>Russo Trip</span>
-        </Link>
-        <nav>
-          <ul className="flex flex-row space-x-8">
-            <li>
-              <Link href="/blog">Blog</Link>
-            </li>
-            <li>
-              <Link href="/about">About</Link>
-            </li>
-            {user ? (
+        <div className="flex items-center">
+          <Link className="flex items-center mr-8" href="/">
+            <h2 className="text-4xl">RT</h2>
+            <FaMountain className="text-3xl" />
+          </Link>
+          <nav>
+            <ul className="flex flex-row space-x-8">
               <li>
-                <Link href="/account/profile">Profile</Link>
+                <Link href="/blog">Экскурсии</Link>
               </li>
-            ) : (
               <li>
-                <Link href="/account/login">Login</Link>
+                <Link href="/about">О нас</Link>
               </li>
-            )}
-          </ul>
-        </nav>
+              {user ? (
+                <li>
+                  <Link href="/account/profile">Профиль</Link>
+                </li>
+              ) : (
+                <li>
+                  <Link href="/account/login">Вход</Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+        </div>
+        <Search />
       </div>
     </header>
   );

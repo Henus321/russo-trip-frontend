@@ -1,13 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
+import { IPost } from "@/models";
 
 interface Props {
   jwt: string;
-  postSlug: string;
+  post: IPost;
 }
 
-function Bookmark({ jwt, postSlug }: Props) {
+function Bookmark({ jwt, post }: Props) {
   const { authStore, bookmarksStore } = useStores();
   const { user } = authStore;
   const {
@@ -20,10 +21,8 @@ function Bookmark({ jwt, postSlug }: Props) {
     resetBookmark,
   } = bookmarksStore;
 
-  const slug = `${user?.id}-${postSlug}`;
-
   useEffect(() => {
-    if (user) fetchBookmark({ jwt, slug, user });
+    if (user) fetchBookmark({ jwt, post, user });
     // eslint-disable-next-line
   }, [user, reFetch]);
 
@@ -40,7 +39,7 @@ function Bookmark({ jwt, postSlug }: Props) {
 
   const onClick = async () => {
     if (!isLoading && !bookmark) {
-      addBookmark({ jwt, slug, user });
+      addBookmark({ jwt, post, user });
     }
     if (!isLoading && bookmark) {
       deleteBookmark({ jwt, bookmark });
@@ -48,15 +47,13 @@ function Bookmark({ jwt, postSlug }: Props) {
   };
 
   return (
-    <div>
+    <div className="mb-2">
       <button
         disabled={isLoading}
-        className={`${
-          bookmark ? "bg-red-300" : "bg-blue-200"
-        } px-2 py-1 disabled:bg-black`}
+        className=" bg-slate-800 text-white shadow-md py-2 px-4 disabled:text-gray-400 hover:bg-slate-900 active:text-slate-200"
         onClick={() => onClick()}
       >
-        Bookmark
+        {bookmark ? "Удалить из закладок" : "Добавить в закладки"}
       </button>
     </div>
   );

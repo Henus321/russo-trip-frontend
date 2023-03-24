@@ -1,5 +1,5 @@
 import { API_URL } from "@/constants";
-import { IBookmark, IComment, IData, IPost } from "@/models";
+import { IBookmark, IComment, IData, IPost, IUser } from "@/models";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
 
@@ -40,8 +40,35 @@ export const convertDataToBookmarks = (data: IData[]): IBookmark[] => {
   const bookmark: IBookmark[] = data.map((book) => ({
     user: book.attributes.user.data.id,
     slug: book.attributes.slug,
+    post: convertDataToPosts([book.attributes.post.data])[0],
     id: book.id,
   }));
 
   return bookmark;
+};
+
+export const beatifyDate = (date: string, time: boolean = false) => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: time ? "numeric" : undefined,
+    minute: time ? "numeric" : undefined,
+  };
+
+  return new Date(date)
+    .toLocaleDateString("ru-RU", options)
+    .split(".")
+    .join(" ")
+    .slice(0, time ? undefined : -2);
+};
+
+export const capitalizeFirstLetter = (city: string) =>
+  city
+    .split("-")
+    .map((string) => string.slice(0, 1).toUpperCase() + string.slice(1))
+    .join(" ");
+
+export const getBookmarkSlug = (user: IUser, post: IPost) => {
+  return `${user?.id}-${post.slug}`;
 };

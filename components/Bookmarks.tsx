@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
 import { IBookmark } from "@/models";
-import Link from "next/link";
+
+import Post from "./Post";
 
 interface Props {
   jwt: string;
@@ -39,31 +40,30 @@ function Bookmarks({ jwt }: Props) {
   const onClick = async (bookmark: IBookmark) =>
     deleteBookmark({ jwt, bookmark });
 
-  const getPostSlug = (bookmark: IBookmark) =>
-    bookmark.slug.split("-").slice(1).join("-");
-
   return (
-    <div className="flex flex-col">
-      <h2 className="text-2xl">Bookmarks</h2>
-      {bookmarks &&
-        bookmarks.map((bookmark) => (
-          <div className="flex items-center mb-2" key={bookmark.slug}>
-            <span>{bookmark.slug}</span>
-            <Link
-              className="bg-slate-300 mx-2 py-1 px-2"
-              href={`/blog/${getPostSlug(bookmark)}`}
-            >
-              link
-            </Link>
-            <button
-              disabled={isLoading}
-              className="bg-red-100 py-0.75 px-1.5 ml-2 disabled:bg-black"
-              onClick={() => onClick(bookmark)}
-            >
-              x
-            </button>
+    <div className="flex flex-col mb-4">
+      <h2 className="text-3xl underline mb-2">Закладки</h2>
+      <div className="grid grid-cols-4 gap-x-8 gap-y-10">
+        {bookmarks &&
+          bookmarks.length > 0 &&
+          bookmarks.map((bookmark) => (
+            <div className="relative flex mb-2" key={bookmark.slug}>
+              <Post small post={bookmark.post} />
+              <button
+                disabled={isLoading}
+                className="absolute top-0 right-0 bg-transparent py-1 px-3 text-2xl font-bold"
+                onClick={() => onClick(bookmark)}
+              >
+                x
+              </button>
+            </div>
+          ))}
+        {bookmarks && bookmarks.length === 0 && (
+          <div className="flex items-center justify-center h-48 p-6 bg-slate-100 shadow-md">
+            <span>У вас нет закладок...</span>
           </div>
-        ))}
+        )}
+      </div>
     </div>
   );
 }

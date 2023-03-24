@@ -8,7 +8,7 @@ import {
   NOT_AUTHORIZED_MESSAGE,
   NO_TOKEN_MESSAGE,
 } from "@/constants";
-import { convertDataToBookmarks } from "@/helpers";
+import { convertDataToBookmarks, getBookmarkSlug } from "@/helpers";
 import qs from "qs";
 
 class bookmarksStore {
@@ -48,9 +48,11 @@ class bookmarksStore {
     this.reFetch = status;
   };
 
-  fetchBookmark = async ({ jwt, slug, user }: INewBookmark) => {
+  fetchBookmark = async ({ jwt, post, user }: INewBookmark) => {
     if (!user) return;
     this.setLoading(true);
+
+    const slug = getBookmarkSlug(user, post);
 
     const bookmarkQuery = qs.stringify({
       filters: {
@@ -60,6 +62,9 @@ class bookmarksStore {
       },
       populate: {
         user: "user",
+        post: {
+          populate: "*",
+        },
       },
     });
 
@@ -107,6 +112,9 @@ class bookmarksStore {
       },
       populate: {
         user: "user",
+        post: {
+          populate: "*",
+        },
       },
       sort: ["createdAt:desc"],
     });
@@ -134,12 +142,14 @@ class bookmarksStore {
     this.setLoading(false);
   };
 
-  addBookmark = async ({ jwt, slug, user }: INewBookmark) => {
+  addBookmark = async ({ jwt, post, user }: INewBookmark) => {
     if (!jwt || !user) {
       toast.error(NOT_AUTHORIZED_MESSAGE);
       return;
     }
     this.setLoading(true);
+
+    const slug = getBookmarkSlug(user, post);
 
     const response = await fetch(`${API_URL}/api/bookmarks`, {
       method: "POST",
@@ -151,6 +161,7 @@ class bookmarksStore {
         data: {
           user: user?.id,
           slug,
+          post: post,
         },
       }),
     });

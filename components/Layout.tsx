@@ -17,7 +17,7 @@ export default function Layout({
   children,
 }: Props) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen text-slate-900">
       <Head>
         <title>{title}</title>
         <meta name="keywords" content={keywords} />
@@ -25,8 +25,7 @@ export default function Layout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Search />
-      <main className="container mx-auto my-7">{children}</main>
+      <main className="container mx-auto mt-7 mb-14">{children}</main>
       <Footer />
     </div>
   );
