@@ -22,7 +22,7 @@ export default function HomePage({ posts }: Props) {
         ))}
       </div>
       <Link
-        className="block text-center py-4 mb-6 bg-slate-800 text-white text-xl w-full hover:bg-slate-900 active:text-slate-200"
+        className="block text-center py-4 mb-6 text-xl w-full text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
         href="/blog"
       >
         Показать все

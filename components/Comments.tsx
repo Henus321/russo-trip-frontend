@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
+
 import Comment from "./Comment";
+import OnUnmount from "./OnUnmount";
 
 interface Props {
   postId: number;
@@ -10,12 +12,12 @@ interface Props {
 
 function Comments({ postId, jwt }: Props) {
   const { authStore, commentsStore } = useStores();
-  const { user } = authStore;
+  const { user, isLoading: authIsLoading } = authStore;
   const {
     comments,
     reFetch,
     commentMessage,
-    isLoading,
+    isLoading: commentsIsLoading,
     setCommentMessage,
     fetchComments,
     addComment,
@@ -25,17 +27,6 @@ function Comments({ postId, jwt }: Props) {
   useEffect(() => {
     fetchComments(postId);
   }, [fetchComments, postId, reFetch]);
-
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    return () => {
-      if (firstUpdate.current) {
-        firstUpdate.current = false;
-        return;
-      }
-      resetComments();
-    };
-  }, [resetComments]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,16 +38,24 @@ function Comments({ postId, jwt }: Props) {
     setCommentMessage(e.target.value);
 
   return (
-    <div className="flex flex-col bg-slate-100 w-full px-4 py-6 shadow-md">
-      <h2 className="text-3xl text-center font-bold underline mb-6">
-        Комментарии
-      </h2>
+    <div className="flex flex-col bg-secondary-color w-full px-4 py-6 shadow-md">
+      <OnUnmount func={resetComments} />
+      <div className="flex flex-col mb-6">
+        <h2 className="text-3xl text-center font-bold underline mb-1">
+          Комментарии
+        </h2>
+        {!user && !authIsLoading && (
+          <span className="text-center">
+            Войдите чтобы оставить комментарий
+          </span>
+        )}
+      </div>
       {comments &&
         comments.length > 0 &&
         comments.map((comment) => (
           <Comment key={`${comment.id}${comment.author}`} comment={comment} />
         ))}
-      {!isLoading && comments && comments.length === 0 && (
+      {!commentsIsLoading && comments && comments.length === 0 && (
         <div className="flex flex-col mb-10 mt-6 mx-auto">
           <span>Нет комментариев...</span>
         </div>
@@ -77,8 +76,8 @@ function Comments({ postId, jwt }: Props) {
             placeholder="Введите текст..."
           />
           <button
-            disabled={isLoading}
-            className="bg-slate-800 text-white shadow-sm text-xl px-4 py-1 self-center disabled:text-gray-400 hover:bg-slate-900 active:text-slate-200"
+            disabled={commentsIsLoading}
+            className="shadow-sm text-xl px-4 py-1 self-center text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
           >
             Отправить
           </button>

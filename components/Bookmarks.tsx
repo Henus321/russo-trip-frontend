@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
 import { IBookmark } from "@/models";
 
 import Post from "./Post";
+import OnUnmount from "./OnUnmount";
 
 interface Props {
   jwt: string;
@@ -26,22 +27,12 @@ function Bookmarks({ jwt }: Props) {
     // eslint-disable-next-line
   }, [user, reFetch]);
 
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    return () => {
-      if (firstUpdate.current) {
-        firstUpdate.current = false;
-        return;
-      }
-      resetBookmark();
-    };
-  }, [resetBookmark]);
-
   const onClick = async (bookmark: IBookmark) =>
     deleteBookmark({ jwt, bookmark });
 
   return (
     <div className="flex flex-col mb-4">
+      <OnUnmount func={resetBookmark} />
       <h2 className="text-3xl underline mb-2">Закладки</h2>
       <div className="grid grid-cols-4 gap-x-8 gap-y-10">
         {bookmarks &&
@@ -59,7 +50,7 @@ function Bookmarks({ jwt }: Props) {
             </div>
           ))}
         {bookmarks && bookmarks.length === 0 && (
-          <div className="flex items-center justify-center h-48 p-6 bg-slate-100 shadow-md">
+          <div className="flex items-center justify-center h-48 p-6 bg-secondary-color shadow-md">
             <span>У вас нет закладок...</span>
           </div>
         )}

@@ -8,6 +8,8 @@ import Link from "next/link";
 
 import Layout from "@/components/Layout";
 import PageTitle from "@/components/PageTitle";
+import Loading from "@/components/Loading";
+import OnUnmount from "@/components/OnUnmount";
 
 function RegistrationPage() {
   const { authStore } = useStores();
@@ -17,6 +19,7 @@ function RegistrationPage() {
     isLoading,
     setRegistrationForm,
     registration,
+    resetRegistrationForm,
   } = authStore;
 
   const { username, email, password, passwordConfirm } = registrationForm;
@@ -46,10 +49,12 @@ function RegistrationPage() {
 
   return (
     <Layout>
+      <OnUnmount func={resetRegistrationForm} />
+      {(isLoading || user) && <Loading />}
       <PageTitle>Регистрация</PageTitle>
       <div className="flex flex-col w-1/2">
         <form
-          className="flex flex-col bg-slate-100 py-6 px-4 shadow-md"
+          className="flex flex-col bg-secondary-color py-6 px-4 shadow-md"
           onSubmit={onSubmit}
         >
           <label className="mb-1" htmlFor="username">
@@ -101,7 +106,7 @@ function RegistrationPage() {
             onChange={onChange}
           />
           <button
-            className="bg-slate-800 text-white py-2 text-xl disabled:text-gray-400 hover:bg-slate-900 active:text-slate-200 mb-2"
+            className="py-2 text-xl mb-2 text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
             disabled={isLoading}
           >
             Зарегистрироваться

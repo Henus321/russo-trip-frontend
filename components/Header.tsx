@@ -10,7 +10,7 @@ function Header() {
   const { user } = authStore;
 
   return (
-    <header className="bg-slate-800 text-white shadow w-full">
+    <header className="bg-primary-color text-white shadow w-full">
       <div className="container mx-auto flex flex-row p-5 items-center justify-between">
         <div className="flex items-center">
           <Link className="flex items-center mr-8" href="/">

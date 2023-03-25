@@ -10,6 +10,8 @@ export const parseCookies = (
 };
 
 export const convertDataToPosts = (data: IData[]): IPost[] => {
+  if (!data) return [];
+
   const posts: IPost[] = data.map(({ attributes, id }: IData) => ({
     ...attributes,
     id,
@@ -26,6 +28,8 @@ export const convertDataToPosts = (data: IData[]): IPost[] => {
 };
 
 export const convertDataToComments = (data: IData[]): IComment[] => {
+  if (!data) return [];
+
   const comments: IComment[] = data.map((comment: IData) => ({
     body: comment.attributes.body,
     createdAt: comment.attributes.createdAt,
@@ -37,6 +41,8 @@ export const convertDataToComments = (data: IData[]): IComment[] => {
 };
 
 export const convertDataToBookmarks = (data: IData[]): IBookmark[] => {
+  if (!data) return [];
+
   const bookmark: IBookmark[] = data.map((book) => ({
     user: book.attributes.user.data.id,
     slug: book.attributes.slug,

@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
 import { IPost } from "@/models";
+import OnUnmount from "./OnUnmount";
 
 interface Props {
   jwt: string;
@@ -19,23 +20,14 @@ function Bookmark({ jwt, post }: Props) {
     deleteBookmark,
     fetchBookmark,
     resetBookmark,
+    setLoading,
   } = bookmarksStore;
 
   useEffect(() => {
     if (user) fetchBookmark({ jwt, post, user });
+    if (!user) setLoading(false);
     // eslint-disable-next-line
   }, [user, reFetch]);
-
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    return () => {
-      if (firstUpdate.current) {
-        firstUpdate.current = false;
-        return;
-      }
-      resetBookmark();
-    };
-  }, [resetBookmark]);
 
   const onClick = async () => {
     if (!isLoading && !bookmark) {
@@ -46,11 +38,14 @@ function Bookmark({ jwt, post }: Props) {
     }
   };
 
+  if (!user) return <></>;
+
   return (
     <div className="mb-2">
+      <OnUnmount func={resetBookmark} />
       <button
         disabled={isLoading}
-        className=" bg-slate-800 text-white shadow-md py-2 px-4 disabled:text-gray-400 hover:bg-slate-900 active:text-slate-200"
+        className="shadow-md py-2 px-4 text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
         onClick={() => onClick()}
       >
         {bookmark ? "Удалить из закладок" : "Добавить в закладки"}

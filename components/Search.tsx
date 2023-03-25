@@ -17,11 +17,11 @@ export default function Search() {
         <form className="relative text-gray">
           <input
             type="search"
-            className="bg-white text-slate-900 h-10 px-5 pr-10 text-sm focus:outline-none w-80"
+            className="bg-white text-primary-color-alt h-10 px-5 pr-10 text-sm focus:outline-none w-80"
             placeholder="Поиск по экскурсиям..."
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <FaSearch className="absolute top-0 right-0 text-slate-900 mt-3 mr-4" />
+          <FaSearch className="absolute top-0 right-0 text-primary-color-alt mt-3 mr-4" />
         </form>
       </div>
     </div>

@@ -27,13 +27,16 @@ function ChangePassword() {
   return (
     <div className="flex flex-col mb-6">
       <h2 className="text-3xl underline mb-3">Изменить пароль</h2>
-      <form className="flex flex-col bg-slate-100 py-6 px-4 shadow-md">
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col bg-secondary-color py-6 px-4 shadow-md"
+      >
         <label className="mb-1" htmlFor="currentPassword">
           Пароль
         </label>
         <input
           className="bg-white shadow-sm py-1 px-2 mb-2 outline-none"
-          required
+          required={true}
           type="password"
           id="currentPassword"
           value={currentPassword}
@@ -62,9 +65,8 @@ function ChangePassword() {
           onChange={onChange}
         />
         <button
-          className="bg-slate-300 shadow-sm py-1.5 px-4 self-start mt-2 disabled:text-gray-700"
+          className="py-1.5 px-4 self-start mt-2 text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
           disabled={isLoading}
-          onClick={onSubmit}
         >
           Сохранить
         </button>

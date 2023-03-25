@@ -17,7 +17,7 @@ export default function Post({ post, small = false }: Props) {
   const formattedAuthor = capitalizeFirstLetter(author);
 
   return (
-    <div className="flex flex-col w-full p-4 shadow-xl">
+    <div className={`flex flex-col w-full p-4 ${!small ? "shadow-xl" : "shadow-md"}`}>
       {!small && (
         <>
           <div className="relative h-72 w-full mb-1">

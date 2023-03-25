@@ -19,3 +19,22 @@ body {
   font-size: 2rem;
   font-weight: bold;
 }
+
+.Toastify__toast--error,
+.Toastify__toast--warning,
+.Toastify__toast--success {
+  border-radius: 0 !important;
+}
+
+:root {
+  --primary-color: #1e293b;
+  --primary-color-alt: #0f172a;
+  --secondary-color: #f1f5f9;
+  --secondary-color-alt: #e2e8f0;
+  --toastify-color-success: #1e293b;
+  --toastify-color-progress-success: #1e293b;
+  --toastify-color-error: #1e293b;
+  --toastify-color-progress-error: #1e293b;
+  --toastify-color-warning: #1e293b;
+  --toastify-color-progress-warning: #1e293b;
+}

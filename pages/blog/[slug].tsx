@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/router";
 import { FaArrowLeft } from "react-icons/fa";
 import { useStores } from "@/store";
+import { observer } from "mobx-react-lite";
 import Image from "next/image";
 import qs from "qs";
 
@@ -18,17 +19,21 @@ import Layout from "@/components/Layout";
 import Comments from "@/components/Comments";
 import Bookmark from "@/components/Bookmark";
 import PageTitle from "@/components/PageTitle";
+import Loading from "@/components/Loading";
 
 interface Props {
   post: IPost;
   jwt: string;
 }
 
-export default function PostPage({ post, jwt }: Props) {
+function PostPage({ post, jwt }: Props) {
   const { city, image, title, markdown, date, author, id } = post;
-  const { authStore } = useStores();
-  const { user } = authStore;
+  const { authStore, bookmarksStore, commentsStore } = useStores();
+  const { isLoading: authIsLoading } = authStore;
+  const { isLoading: bookmarksIsLoading } = bookmarksStore;
+  const { isLoading: commentsIsLoading } = commentsStore;
 
+  const isLoading = authIsLoading || bookmarksIsLoading || commentsIsLoading;
   const formattedDate = beatifyDate(date);
 
   const router = useRouter();
@@ -39,6 +44,7 @@ export default function PostPage({ post, jwt }: Props) {
 
   return (
     <Layout>
+      {isLoading && <Loading />}
       <button className="flex items-center underline" onClick={() => onClick()}>
         <FaArrowLeft className="mr-2" /> Назад
       </button>
@@ -57,7 +63,7 @@ export default function PostPage({ post, jwt }: Props) {
           priority
         />
       </div>
-      {user && <Bookmark jwt={jwt} post={post} />}
+      <Bookmark jwt={jwt} post={post} />
       <div
         className="markdown flex flex-col w-full mb-2"
         dangerouslySetInnerHTML={{ __html: marked(markdown) }}
@@ -70,6 +76,8 @@ export default function PostPage({ post, jwt }: Props) {
     </Layout>
   );
 }
+
+export default observer(PostPage);
 
 export const getServerSideProps: GetServerSideProps = async ({
   params,
@@ -96,9 +104,11 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const postsResponse = await fetch(`${API_URL}/api/posts?${postsQuery}`);
   const { data }: { data: IData[] } = await postsResponse.json();
-  const post: IPost = convertDataToPosts(data)[0];
+  const postArr: IPost[] = convertDataToPosts(data);
+  const post = postArr.length > 0 ? postArr[0] : null;
 
   return {
+    notFound: post ? false : true,
     props: {
       post,
       jwt,

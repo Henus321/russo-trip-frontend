@@ -6,10 +6,13 @@ import Link from "next/link";
 
 import Layout from "@/components/Layout";
 import PageTitle from "@/components/PageTitle";
+import Loading from "@/components/Loading";
+import OnUnmount from "@/components/OnUnmount";
 
 function LoginPage() {
   const { authStore } = useStores();
-  const { user, loginForm, isLoading, setLoginForm, login } = authStore;
+  const { user, loginForm, isLoading, setLoginForm, login, resetLoginForm } =
+    authStore;
 
   const { email, password } = loginForm;
 
@@ -33,10 +36,12 @@ function LoginPage() {
 
   return (
     <Layout>
+      <OnUnmount func={resetLoginForm} />
+      {(isLoading || user) && <Loading />}
       <PageTitle>Вход</PageTitle>
       <div className="flex flex-col w-1/2">
         <form
-          className="flex flex-col bg-slate-100 py-6 px-4 shadow-md"
+          className="flex flex-col bg-secondary-color py-6 px-4 shadow-md"
           onSubmit={onSubmit}
         >
           <label className="mb-1" htmlFor="email">
@@ -64,7 +69,7 @@ function LoginPage() {
             onChange={onChange}
           />
           <button
-            className="bg-slate-800 text-white py-2 text-xl disabled:text-gray-400 hover:bg-slate-900 active:text-slate-200 mb-2"
+            className="py-2 text-xl mb-2 text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
             disabled={isLoading}
           >
             Войти

@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Header from "./Header";
 import Footer from "./Footer";
-import Search from "./Search";
 
 interface Props {
   title: string;
@@ -17,7 +16,7 @@ export default function Layout({
   children,
 }: Props) {
   return (
-    <div className="flex flex-col min-h-screen text-slate-900">
+    <div className="flex flex-col min-h-screen text-primary-color-alt">
       <Head>
         <title>{title}</title>
         <meta name="keywords" content={keywords} />
