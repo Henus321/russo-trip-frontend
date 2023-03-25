@@ -1,7 +1,7 @@
 import { API_URL } from "@/constants";
 import { IPost } from "@/models";
 import { GetStaticProps } from "next";
-import { convertDataToPosts } from "@/helpers";
+import { convertDataToPosts, extendKeywords } from "@/helpers";
 
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
@@ -15,8 +15,10 @@ interface Props {
 }
 
 export default function BlogPage({ cities, posts }: Props) {
+  const keywords = extendKeywords(cities.join(", "));
+
   return (
-    <Layout>
+    <Layout title="Russo Trip | Экскурсии" keywords={keywords}>
       <HomePageNavigation />
       <div className="flex justify-between">
         <div className="w-3/4 mr-10">

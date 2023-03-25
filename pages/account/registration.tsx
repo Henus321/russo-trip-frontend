@@ -48,7 +48,7 @@ function RegistrationPage() {
   };
 
   return (
-    <Layout>
+    <Layout title="Russo Trip | Регистрация">
       <OnUnmount func={resetRegistrationForm} />
       {(isLoading || user) && <Loading />}
       <PageTitle>Регистрация</PageTitle>

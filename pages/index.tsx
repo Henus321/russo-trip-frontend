@@ -14,7 +14,7 @@ interface Props {
 
 export default function HomePage({ posts }: Props) {
   return (
-    <Layout>
+    <Layout title="Russo Trip | Главная">
       <PageTitle>Последние экскурсии</PageTitle>
       <div className="grid grid-cols-3 gap-x-5 gap-y-6 mb-6">
         {posts.slice(0, 4).map((post, index) => (

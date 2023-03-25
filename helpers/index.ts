@@ -1,4 +1,4 @@
-import { API_URL } from "@/constants";
+import { API_URL, DEFAULT_KEYWORDS } from "@/constants";
 import { IBookmark, IComment, IData, IPost, IUser } from "@/models";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
@@ -77,4 +77,8 @@ export const capitalizeFirstLetter = (city: string) =>
 
 export const getBookmarkSlug = (user: IUser, post: IPost) => {
   return `${user?.id}-${post.slug}`;
+};
+
+export const extendKeywords = (keywords: string) => {
+  return `${DEFAULT_KEYWORDS}, ${keywords}`;
 };

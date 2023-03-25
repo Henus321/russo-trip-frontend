@@ -1,6 +1,10 @@
 import { API_URL } from "@/constants";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { capitalizeFirstLetter, convertDataToPosts } from "@/helpers";
+import {
+  capitalizeFirstLetter,
+  convertDataToPosts,
+  extendKeywords,
+} from "@/helpers";
 import { IPost } from "@/models";
 
 import Layout from "@/components/Layout";
@@ -16,8 +20,13 @@ interface Props {
 }
 
 export default function CityBlogPage({ cityName, cities, posts }: Props) {
+  const keywords = extendKeywords(cityName);
+
   return (
-    <Layout>
+    <Layout
+      title={`Russo Trip | ${capitalizeFirstLetter(cityName)}`}
+      keywords={keywords}
+    >
       <HomePageNavigation />
       <div className="flex justify-between">
         <div className="w-3/4 mr-10">

@@ -13,6 +13,10 @@ module.exports = {
         "secondary-color": "var(--secondary-color)",
         "secondary-color-alt": "var(--secondary-color-alt)",
       },
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        robotoSlab: ["Roboto Slab", "sans-serif"],
+      },
     },
   },
   plugins: [],

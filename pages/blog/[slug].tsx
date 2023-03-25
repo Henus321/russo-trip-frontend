@@ -6,6 +6,7 @@ import {
   beatifyDate,
   capitalizeFirstLetter,
   convertDataToPosts,
+  extendKeywords,
   parseCookies,
 } from "@/helpers";
 import { useRouter } from "next/router";
@@ -33,6 +34,8 @@ function PostPage({ post, jwt }: Props) {
   const { isLoading: bookmarksIsLoading } = bookmarksStore;
   const { isLoading: commentsIsLoading } = commentsStore;
 
+  const keywords = extendKeywords(`${title}, ${city}`);
+
   const isLoading = authIsLoading || bookmarksIsLoading || commentsIsLoading;
   const formattedDate = beatifyDate(date);
 
@@ -43,7 +46,7 @@ function PostPage({ post, jwt }: Props) {
   };
 
   return (
-    <Layout>
+    <Layout title={`Russo Trip | ${title}`} keywords={keywords}>
       {isLoading && <Loading />}
       <button className="flex items-center underline" onClick={() => onClick()}>
         <FaArrowLeft className="mr-2" /> Назад

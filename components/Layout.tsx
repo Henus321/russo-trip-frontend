@@ -1,4 +1,6 @@
+import { DEFAULT_KEYWORDS } from "@/constants";
 import Head from "next/head";
+
 import Header from "./Header";
 import Footer from "./Footer";
 
@@ -16,7 +18,7 @@ export default function Layout({
   children,
 }: Props) {
   return (
-    <div className="flex flex-col min-h-screen text-primary-color-alt">
+    <div className="flex flex-col min-h-screen text-primary-color-alt font-roboto">
       <Head>
         <title>{title}</title>
         <meta name="keywords" content={keywords} />
@@ -32,6 +34,6 @@ export default function Layout({
 
 Layout.defaultProps = {
   title: "Russo Trip",
-  description: "Travel blog about Russia",
-  keywords: "travel, blog, russia, trip",
+  description: "Блог о путешествиях по России",
+  keywords: DEFAULT_KEYWORDS,
 };

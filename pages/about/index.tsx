@@ -4,7 +4,7 @@ import HomePageNavigation from "@/components/HomePageNavigation";
 
 export default function AboutPage() {
   return (
-    <Layout>
+    <Layout title="Russo Trip | О нас">
       <HomePageNavigation />
       <PageTitle>О нас</PageTitle>
       <p className="text-justify">

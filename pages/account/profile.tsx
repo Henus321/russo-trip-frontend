@@ -33,7 +33,7 @@ function Profile({ jwt }: Props) {
   }, [authIsLoading, user, router]);
 
   return (
-    <Layout>
+    <Layout title="Russo Trip | Профиль">
       <OnUnmount func={resetChangePasswordForm} />
       {(authIsLoading || bookmarksIsLoading || !user) && <Loading />}
       <PageTitle>Профиль</PageTitle>

@@ -35,7 +35,7 @@ function LoginPage() {
   };
 
   return (
-    <Layout>
+    <Layout title="Russo Trip | Вход">
       <OnUnmount func={resetLoginForm} />
       {(isLoading || user) && <Loading />}
       <PageTitle>Вход</PageTitle>
