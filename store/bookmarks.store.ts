@@ -50,44 +50,51 @@ class bookmarksStore {
 
   fetchBookmark = async ({ jwt, post, user }: INewBookmark) => {
     if (!user) return;
+
     this.setLoading(true);
+    try {
+      const slug = getBookmarkSlug(user, post);
 
-    const slug = getBookmarkSlug(user, post);
-
-    const bookmarkQuery = qs.stringify({
-      filters: {
-        slug: {
-          $eq: slug,
+      const bookmarkQuery = qs.stringify({
+        filters: {
+          slug: {
+            $eq: slug,
+          },
         },
-      },
-      populate: {
-        user: "user",
-        post: {
-          populate: "*",
+        populate: {
+          user: "user",
+          post: {
+            populate: "*",
+          },
         },
-      },
-    });
+      });
 
-    const response = await fetch(`${API_URL}/api/bookmarks?${bookmarkQuery}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
+      const response = await fetch(
+        `${API_URL}/api/bookmarks?${bookmarkQuery}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
 
-    const { data }: { data: IData[] } = await response.json();
+      const { data }: { data: IData[] } = await response.json();
 
-    if (!response.ok) {
-      if (response.status === 403 || response.status === 401) {
-        toast.error(NO_TOKEN_MESSAGE);
-        this.setLoading(false);
-        return;
+      if (!response.ok) {
+        if (response.status === 403 || response.status === 401) {
+          toast.error(NO_TOKEN_MESSAGE);
+        } else {
+          toast.error(COMMON_ERROR_MESSAGE);
+        }
+      } else {
+        const book = convertDataToBookmarks(data)[0];
+        this.setBookmark(book);
       }
-      toast.error(COMMON_ERROR_MESSAGE);
-    } else {
-      const book = convertDataToBookmarks(data)[0];
-      this.setBookmark(book);
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
@@ -100,44 +107,51 @@ class bookmarksStore {
     user: IUser | null;
   }) => {
     if (!user) return;
-    this.setLoading(true);
 
-    const bookmarkQuery = qs.stringify({
-      filters: {
-        user: {
-          id: {
-            $eq: user.id,
+    this.setLoading(true);
+    try {
+      const bookmarkQuery = qs.stringify({
+        filters: {
+          user: {
+            id: {
+              $eq: user.id,
+            },
           },
         },
-      },
-      populate: {
-        user: "user",
-        post: {
-          populate: "*",
+        populate: {
+          user: "user",
+          post: {
+            populate: "*",
+          },
         },
-      },
-      sort: ["createdAt:desc"],
-    });
+        sort: ["createdAt:desc"],
+      });
 
-    const response = await fetch(`${API_URL}/api/bookmarks?${bookmarkQuery}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
-    const { data }: { data: IData[] } = await response.json();
+      const response = await fetch(
+        `${API_URL}/api/bookmarks?${bookmarkQuery}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      const { data }: { data: IData[] } = await response.json();
 
-    if (!response.ok) {
-      if (response.status === 403 || response.status === 401) {
-        toast.error(NO_TOKEN_MESSAGE);
-        this.setLoading(false);
-        return;
+      if (!response.ok) {
+        if (response.status === 403 || response.status === 401) {
+          toast.error(NO_TOKEN_MESSAGE);
+        } else {
+          toast.error(COMMON_ERROR_MESSAGE);
+        }
+      } else {
+        const books = convertDataToBookmarks(data);
+        this.setBookmarks(books);
       }
-      toast.error(COMMON_ERROR_MESSAGE);
-    } else {
-      const books = convertDataToBookmarks(data);
-      this.setBookmarks(books);
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
@@ -147,34 +161,38 @@ class bookmarksStore {
       toast.error(NOT_AUTHORIZED_MESSAGE);
       return;
     }
+
     this.setLoading(true);
+    try {
+      const slug = getBookmarkSlug(user, post);
 
-    const slug = getBookmarkSlug(user, post);
-
-    const response = await fetch(`${API_URL}/api/bookmarks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-      body: JSON.stringify({
-        data: {
-          user: user?.id,
-          slug,
-          post: post,
+      const response = await fetch(`${API_URL}/api/bookmarks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
         },
-      }),
-    });
+        body: JSON.stringify({
+          data: {
+            user: user?.id,
+            slug,
+            post: post,
+          },
+        }),
+      });
 
-    if (!response.ok) {
-      if (response.status === 403 || response.status === 401) {
-        toast.error(NO_TOKEN_MESSAGE);
-        this.setLoading(false);
-        return;
+      if (!response.ok) {
+        if (response.status === 403 || response.status === 401) {
+          toast.error(NO_TOKEN_MESSAGE);
+        } else {
+          toast.error(COMMON_ERROR_MESSAGE);
+        }
+      } else {
+        this.setFetch(!this.reFetch);
       }
-      toast.error(COMMON_ERROR_MESSAGE);
-    } else {
-      this.setFetch(!this.reFetch);
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
@@ -190,24 +208,28 @@ class bookmarksStore {
       toast.error(NOT_AUTHORIZED_MESSAGE);
       return;
     }
+
     this.setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/bookmarks/${bookmark.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
 
-    const response = await fetch(`${API_URL}/api/bookmarks/${bookmark.id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
-
-    if (!response.ok) {
-      if (response.status === 403 || response.status === 401) {
-        toast.error(NO_TOKEN_MESSAGE);
-        this.setLoading(false);
-        return;
+      if (!response.ok) {
+        if (response.status === 403 || response.status === 401) {
+          toast.error(NO_TOKEN_MESSAGE);
+        } else {
+          toast.error(COMMON_ERROR_MESSAGE);
+        }
+      } else {
+        this.setFetch(!this.reFetch);
       }
-      toast.error(COMMON_ERROR_MESSAGE);
-    } else {
-      this.setFetch(!this.reFetch);
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
