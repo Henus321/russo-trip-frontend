@@ -1,7 +1,6 @@
 import { API_URL } from "@/constants";
 import { IData, IPost } from "@/models";
 import { GetServerSideProps } from "next";
-import { marked } from "marked";
 import {
   beatifyDate,
   capitalizeFirstLetter,
@@ -9,8 +8,6 @@ import {
   extendKeywords,
   parseCookies,
 } from "@/helpers";
-import { useRouter } from "next/router";
-import { FaArrowLeft } from "react-icons/fa";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
 import Image from "next/image";
@@ -21,6 +18,8 @@ import Comments from "@/components/Comments";
 import Bookmark from "@/components/Bookmark";
 import PageTitle from "@/components/PageTitle";
 import Loading from "@/components/Loading";
+import BackPageNavigation from "@/components/BackPageNavigation";
+import Markdown from "@/components/Markdown";
 
 interface Props {
   post: IPost;
@@ -39,23 +38,17 @@ function PostPage({ post, jwt }: Props) {
   const isLoading = authIsLoading || bookmarksIsLoading || commentsIsLoading;
   const formattedDate = beatifyDate(date);
 
-  const router = useRouter();
-
-  const onClick = () => {
-    router.back();
-  };
-
   return (
     <Layout title={`Russo Trip | ${title}`} keywords={keywords}>
       {isLoading && <Loading />}
-      <button className="flex items-center underline" onClick={() => onClick()}>
-        <FaArrowLeft className="mr-2" /> Назад
-      </button>
+      <BackPageNavigation />
       <PageTitle>
         {title}
-        <span className="text-xl">{capitalizeFirstLetter(city)}</span>
+        <span className="text-xl font-normal">
+          {capitalizeFirstLetter(city)}
+        </span>
       </PageTitle>
-      <div className="relative w-full h-[40rem] my-2">
+      <div className="relative w-full h-[56rem] my-2">
         <Image
           className="block mb-2 object-cover"
           src={image.large}
@@ -67,10 +60,7 @@ function PostPage({ post, jwt }: Props) {
         />
       </div>
       <Bookmark jwt={jwt} post={post} />
-      <div
-        className="markdown flex flex-col w-full mb-2"
-        dangerouslySetInnerHTML={{ __html: marked(markdown) }}
-      ></div>
+      <Markdown markdown={markdown} />
       <div className="flex justify-between mb-2">
         <span>{formattedDate}</span>
         <span>Автор: {capitalizeFirstLetter(author)}</span>
@@ -88,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const { jwt } = parseCookies(req);
 
-  const postsQuery = qs.stringify({
+  const query = qs.stringify({
     filters: {
       slug: {
         $eq: params?.slug,
@@ -105,8 +95,8 @@ export const getServerSideProps: GetServerSideProps = async ({
     },
   });
 
-  const postsResponse = await fetch(`${API_URL}/api/posts?${postsQuery}`);
-  const { data }: { data: IData[] } = await postsResponse.json();
+  const response = await fetch(`${API_URL}/api/posts?${query}`);
+  const { data }: { data: IData[] } = await response.json();
   const postArr: IPost[] = convertDataToPosts(data);
   const post = postArr.length > 0 ? postArr[0] : null;
 

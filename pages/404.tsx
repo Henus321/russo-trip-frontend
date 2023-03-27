@@ -4,7 +4,7 @@ import PageTitle from "@/components/PageTitle";
 
 export default function NotFoundPage() {
   return (
-    <Layout title="Page Not Found">
+    <Layout title="Russo Trip | Страница не найдена">
       <HomePageNavigation />
       <PageTitle>Страница не найдена</PageTitle>
       <div className="text-center my-40">

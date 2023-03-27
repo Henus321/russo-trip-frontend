@@ -3,6 +3,7 @@ import { API_URL } from "@/constants";
 import { IPost } from "@/models";
 import { GetStaticProps } from "next";
 import { convertDataToPosts } from "@/helpers";
+import qs from "qs";
 
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
@@ -17,7 +18,7 @@ export default function HomePage({ posts }: Props) {
     <Layout title="Russo Trip | Главная">
       <PageTitle>Последние экскурсии</PageTitle>
       <div className="grid grid-cols-3 gap-x-5 gap-y-6 mb-6">
-        {posts.slice(0, 4).map((post, index) => (
+        {posts.map((post, index) => (
           <Post key={index} post={post} />
         ))}
       </div>
@@ -32,9 +33,19 @@ export default function HomePage({ posts }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const response = await fetch(
-    `${API_URL}/api/posts?populate=*&sort=date:desc`
-  );
+  const query = qs.stringify({
+    populate: "*",
+    sort: {
+      date: "desc",
+    },
+    pagination: {
+      start: 0,
+      limit: 6,
+    },
+  });
+
+  const response = await fetch(`${API_URL}/api/posts?${query}`);
+
   const { data } = await response.json();
 
   const posts: IPost[] = convertDataToPosts(data);

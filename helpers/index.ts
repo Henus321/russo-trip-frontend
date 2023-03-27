@@ -1,4 +1,4 @@
-import { API_URL, DEFAULT_KEYWORDS } from "@/constants";
+import { API_URL, DEFAULT_KEYWORDS, POSTS_PER_PAGE } from "@/constants";
 import { IBookmark, IComment, IData, IPost, IUser } from "@/models";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
@@ -81,4 +81,35 @@ export const getBookmarkSlug = (user: IUser, post: IPost) => {
 
 export const extendKeywords = (keywords: string) => {
   return `${DEFAULT_KEYWORDS}, ${keywords}`;
+};
+
+export const getCityWithPagePaths = (posts: IPost[]) => {
+  const allCities = posts.map(({ city }) => city);
+  const uniqueCities = [...new Set(allCities)];
+
+  const citiesDetails = uniqueCities.map((uniqueCity) => {
+    const postsCountOfUniqueCity = allCities.filter(
+      (allCity) => allCity === uniqueCity
+    ).length;
+
+    return {
+      city: uniqueCity,
+      postsCount: postsCountOfUniqueCity,
+    };
+  });
+
+  const citiesParamsWithoutFirstPages = citiesDetails
+    .flatMap(({ city, postsCount }) => {
+      let cityParams = [];
+      const numberOfPages = Math.ceil(postsCount / POSTS_PER_PAGE);
+
+      for (let i = 0; i < numberOfPages; i++) {
+        cityParams.push({ params: { city, page_index: i + 1 + "" } });
+      }
+
+      return cityParams;
+    })
+    .filter((details) => details.params.page_index !== "1");
+
+  return citiesParamsWithoutFirstPages;
 };

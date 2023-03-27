@@ -1,25 +1,36 @@
-import { API_URL } from "@/constants";
+import { API_URL, POSTS_PER_PAGE } from "@/constants";
 import { GetStaticPaths, GetStaticProps } from "next";
 import {
   capitalizeFirstLetter,
   convertDataToPosts,
   extendKeywords,
+  getCityWithPagePaths,
 } from "@/helpers";
 import { IPost } from "@/models";
+import qs from "qs";
 
 import Layout from "@/components/Layout";
 import Post from "@/components/Post";
 import CityNavigation from "@/components/CityNavigation";
 import PageTitle from "@/components/PageTitle";
 import HomePageNavigation from "@/components/HomePageNavigation";
+import Pagination from "@/components/Pagination";
 
 interface Props {
   cityName: string;
   cities: string[];
   posts: IPost[];
+  currentPage: number;
+  numberOfPages: number;
 }
 
-export default function CityBlogPage({ cityName, cities, posts }: Props) {
+export default function CityBlogPage({
+  cityName,
+  cities,
+  posts,
+  currentPage,
+  numberOfPages,
+}: Props) {
   const keywords = extendKeywords(cityName);
 
   return (
@@ -31,7 +42,7 @@ export default function CityBlogPage({ cityName, cities, posts }: Props) {
       <div className="flex justify-between">
         <div className="w-3/4 mr-10">
           <PageTitle>Экскурсии / {capitalizeFirstLetter(cityName)}</PageTitle>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 mb-6">
             {posts.map((post) => (
               <Post key={post.title} post={post} />
             ))}
@@ -41,6 +52,11 @@ export default function CityBlogPage({ cityName, cities, posts }: Props) {
           <CityNavigation cities={cities} />
         </div>
       </div>
+      <Pagination
+        path={`/blog/city/${cityName}`}
+        currentPage={currentPage}
+        numberOfPages={numberOfPages}
+      />
     </Layout>
   );
 }
@@ -51,20 +67,23 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const posts: IPost[] = convertDataToPosts(data);
 
-  const paths = posts.map(({ city }) => ({
-    params: { city },
-  }));
+  const paths = getCityWithPagePaths(posts);
 
   return {
     paths,
-    fallback: "blocking",
+    fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const response = await fetch(
-    `${API_URL}/api/posts?populate=*&sort=date:desc`
-  );
+  const query = qs.stringify({
+    populate: "*",
+    sort: {
+      date: "desc",
+    },
+  });
+
+  const response = await fetch(`${API_URL}/api/posts?${query}`);
 
   const { data } = await response.json();
 
@@ -75,13 +94,27 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const allCities = posts.map(({ city }) => city);
   const uniqueCities = [...new Set(allCities)];
 
+  const page = parseInt(
+    params && params.page_index ? params.page_index + "" : "1"
+  );
+
   const filteredPosts: IPost[] = posts.filter(({ city }) => city === cityName);
+
+  const numberOfPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  const pageIndex = page - 1;
+
+  const orderedPosts = filteredPosts.slice(
+    pageIndex * POSTS_PER_PAGE,
+    (pageIndex + 1) * POSTS_PER_PAGE
+  );
 
   return {
     props: {
       cityName,
       cities: uniqueCities,
-      posts: filteredPosts,
+      posts: orderedPosts,
+      currentPage: page,
+      numberOfPages,
     },
     revalidate: 1,
   };

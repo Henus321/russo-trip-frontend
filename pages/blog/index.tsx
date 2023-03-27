@@ -1,58 +1,47 @@
-import { API_URL } from "@/constants";
-import { IPost } from "@/models";
 import { GetStaticProps } from "next";
-import { convertDataToPosts, extendKeywords } from "@/helpers";
+import { IData, IPost } from "@/models";
+import { API_URL, POSTS_PER_PAGE } from "@/constants";
+import { convertDataToPosts } from "@/helpers";
+import qs from "qs";
 
-import Layout from "@/components/Layout";
-import Post from "@/components/Post";
-import CityNavigation from "@/components/CityNavigation";
-import PageTitle from "@/components/PageTitle";
-import HomePageNavigation from "@/components/HomePageNavigation";
+import BlogPage from "@/pages/blog/page/[page_index]";
 
-interface Props {
-  cities: string[];
-  posts: IPost[];
-}
-
-export default function BlogPage({ cities, posts }: Props) {
-  const keywords = extendKeywords(cities.join(", "));
-
-  return (
-    <Layout title="Russo Trip | Экскурсии" keywords={keywords}>
-      <HomePageNavigation />
-      <div className="flex justify-between">
-        <div className="w-3/4 mr-10">
-          <PageTitle>Экскурсии</PageTitle>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 mb-6">
-            {posts.map((post, index) => (
-              <Post key={index} post={post} />
-            ))}
-          </div>
-        </div>
-        <div className="w-1/4">
-          <CityNavigation cities={cities} />
-        </div>
-      </div>
-    </Layout>
-  );
-}
+export default BlogPage;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const response = await fetch(
-    `${API_URL}/api/posts?populate=*&sort=date:desc`
-  );
-  const { data } = await response.json();
+  const query = qs.stringify({
+    sort: {
+      date: "desc",
+    },
+    populate: {
+      user: "user",
+      image: {
+        populate: "*",
+      },
+      post: {
+        populate: "*",
+      },
+    },
+  });
 
+  const response = await fetch(`${API_URL}/api/posts?${query}`);
+  const { data }: { data: IData[] } = await response.json();
   const posts: IPost[] = convertDataToPosts(data);
 
-  const cities = posts.map(({ city }) => city);
-  const uniqueCities = [...new Set(cities)];
+  const allCities = posts.map(({ city }) => city);
+  const uniqueCities = [...new Set(allCities)];
+
+  const numberOfPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  const currentPage = 1;
+
+  const orderedPosts = posts.slice(0, POSTS_PER_PAGE);
 
   return {
     props: {
       cities: uniqueCities,
-      posts,
+      posts: orderedPosts,
+      currentPage,
+      numberOfPages,
     },
-    revalidate: 1,
   };
 };
