@@ -1,13 +1,13 @@
-export const COMMON_ERROR_MESSAGE = "Something went wrong...";
+export const COMMON_ERROR_MESSAGE = "Что то пошло не так...";
 
-export const COMMON_SUCCESS_MESSAGE = "Success!";
+export const COMMON_SUCCESS_MESSAGE = "Успешно!";
 
-export const PASSWORD_MATCH_MESSAGE = "Passwords do not match";
+export const PASSWORD_MATCH_MESSAGE = "Пароли не совпадают!";
 
-export const NOT_AUTHORIZED_MESSAGE = "You are not authorized";
+export const NOT_AUTHORIZED_MESSAGE = "Вы не авторизованы!";
 
-export const NO_TOKEN_MESSAGE = "No token included";
+export const NO_TOKEN_MESSAGE = "Нет JWT токена!";
 
-export const FAIL_FETCH_MESSAGE = "Failed to fetch data";
+export const FAIL_FETCH_MESSAGE = "Ошибка извлечения данных!";
 
-export const EMPTY_MESSAGE = "The comment is empty, please type something";
+export const EMPTY_MESSAGE = "Комментарий пуст, пожалуйста напишите что-нибудь";

@@ -1,4 +1,5 @@
 import { IUser } from "./auth";
+import { IData } from "./shared";
 
 export interface IImage {
   thumbnail: string;
@@ -34,11 +35,12 @@ export interface INewComment {
 export interface IBookmark {
   id: number;
   user: number;
+  post: IPost;
   slug: string;
 }
 
 export interface INewBookmark {
   jwt: string;
-  slug: string;
+  post: IPost;
   user: IUser | null;
 }

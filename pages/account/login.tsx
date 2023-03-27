@@ -1,14 +1,18 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useStores } from "@/store";
+import { observer } from "mobx-react-lite";
 import Link from "next/link";
 
 import Layout from "@/components/Layout";
-import { observer } from "mobx-react-lite";
+import PageTitle from "@/components/PageTitle";
+import Loading from "@/components/Loading";
+import OnUnmount from "@/components/OnUnmount";
 
 function LoginPage() {
   const { authStore } = useStores();
-  const { user, loginForm, isLoading, setLoginForm, login } = authStore;
+  const { user, loginForm, isLoading, setLoginForm, login, resetLoginForm } =
+    authStore;
 
   const { email, password } = loginForm;
 
@@ -31,44 +35,53 @@ function LoginPage() {
   };
 
   return (
-    <Layout>
-      <h1 className="text-5xl border-b-4 p-5 font-bold">Login Page</h1>
-      <form onSubmit={onSubmit}>
-        <div className="flex flex-col my-2">
-          <label>Email</label>
+    <Layout title="Russo Trip | Вход">
+      <OnUnmount func={resetLoginForm} />
+      {(isLoading || user) && <Loading />}
+      <PageTitle>Вход</PageTitle>
+      <div className="flex flex-col w-1/2">
+        <form
+          className="flex flex-col bg-secondary-color py-6 px-4 shadow-md"
+          onSubmit={onSubmit}
+        >
+          <label className="mb-1" htmlFor="email">
+            Почта
+          </label>
           <input
-            className="bg-slate-200 outline-none p-2"
+            className="bg-white shadow-sm py-1 px-2 mb-2 outline-none"
             required
+            disabled={isLoading}
             type="email"
             id="email"
             value={email}
             onChange={onChange}
           />
-        </div>
-        <div className="flex flex-col my-2">
-          <label>Password</label>
+          <label className="mb-1" htmlFor="password">
+            Пароль
+          </label>
           <input
-            className="bg-slate-200 outline-none p-2"
+            className="bg-white shadow-sm py-1 px-2 mb-4 outline-none"
             required
+            disabled={isLoading}
             type="password"
             id="password"
             value={password}
             onChange={onChange}
           />
-        </div>
-        <button
-          disabled={isLoading}
-          className="bg-slate-600 py-2 px-4 my-2 text-white disabled:bg-gray-300"
-        >
-          Submit
-        </button>
-      </form>
-      <p>
-        Don&apos;t have an account?{" "}
-        <Link className="text-red-500" href="/account/registration">
-          Registration
-        </Link>
-      </p>
+          <button
+            className="py-2 text-xl mb-2 text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
+            disabled={isLoading}
+          >
+            Войти
+          </button>
+          <p className="text-center">
+            Нет аккаунта?{" "}
+            <Link className="underline font-bold" href="/account/registration">
+              Регистрация
+            </Link>
+          </p>
+        </form>
+      </div>
     </Layout>
   );
 }

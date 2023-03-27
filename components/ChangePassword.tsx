@@ -25,30 +25,39 @@ function ChangePassword() {
   };
 
   return (
-    <div className="flex flex-col">
-      <h2 className="text-2xl">Change Password</h2>
-      <form className="flex flex-col bg-red-50 p-2">
-        <label>Password</label>
+    <div className="flex flex-col mb-6">
+      <h2 className="text-3xl underline mb-3">Изменить пароль</h2>
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col bg-secondary-color py-6 px-4 shadow-md"
+      >
+        <label className="mb-1" htmlFor="currentPassword">
+          Пароль
+        </label>
         <input
-          className="bg-slate-200 p-1 outline-none"
-          required
+          className="bg-white shadow-sm py-1 px-2 mb-2 outline-none"
+          required={true}
           type="password"
           id="currentPassword"
           value={currentPassword}
           onChange={onChange}
         />
-        <label>New Password</label>
+        <label className="mb-1" htmlFor="password">
+          Новый пароль
+        </label>
         <input
-          className="bg-slate-200 p-1 outline-none"
+          className="bg-white shadow-sm py-1 px-2 mb-2 outline-none"
           required
           type="password"
           id="password"
           value={password}
           onChange={onChange}
         />
-        <label>Confirm Password</label>
+        <label className="mb-1" htmlFor="passwordConfirmation">
+          Подтвердите пароль
+        </label>
         <input
-          className="bg-slate-200 p-1 outline-none"
+          className="bg-white shadow-sm py-1 px-2 mb-2 outline-none"
           required
           type="password"
           id="passwordConfirmation"
@@ -56,11 +65,10 @@ function ChangePassword() {
           onChange={onChange}
         />
         <button
-          className="bg-slate-200 p-1 outline-none self-start m-2"
+          className="py-1.5 px-4 self-start mt-2 text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
           disabled={isLoading}
-          onClick={onSubmit}
         >
-          Change Password
+          Сохранить
         </button>
       </form>
     </div>

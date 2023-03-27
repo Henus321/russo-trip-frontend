@@ -1,4 +1,8 @@
-import { COMMON_SUCCESS_MESSAGE, NEXT_URL } from "@/constants";
+import {
+  COMMON_ERROR_MESSAGE,
+  COMMON_SUCCESS_MESSAGE,
+  NEXT_URL,
+} from "@/constants";
 import {
   IChangePasswordForm,
   ILoginForm,
@@ -93,7 +97,7 @@ class authStore {
       this.setUser(data.user);
       this.resetRegistrationForm();
     } else {
-      toast.error(data.message);
+      toast.error(COMMON_ERROR_MESSAGE);
     }
     this.setLoading(false);
   };
@@ -114,7 +118,7 @@ class authStore {
       this.setUser(data.user);
       this.resetLoginForm();
     } else {
-      toast.error(data.message);
+      toast.error(COMMON_ERROR_MESSAGE);
     }
     this.setLoading(false);
   };
@@ -161,7 +165,7 @@ class authStore {
       this.resetChangePasswordForm();
       toast.success(COMMON_SUCCESS_MESSAGE);
     } else {
-      toast.success(data.message);
+      toast.error(COMMON_ERROR_MESSAGE);
     }
     this.setLoading(false);
   };

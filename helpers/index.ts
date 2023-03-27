@@ -1,5 +1,5 @@
-import { API_URL } from "@/constants";
-import { IBookmark, IComment, IData, IPost } from "@/models";
+import { API_URL, DEFAULT_KEYWORDS, POSTS_PER_PAGE } from "@/constants";
+import { IBookmark, IComment, IData, IPost, IUser } from "@/models";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
 
@@ -10,6 +10,8 @@ export const parseCookies = (
 };
 
 export const convertDataToPosts = (data: IData[]): IPost[] => {
+  if (!data) return [];
+
   const posts: IPost[] = data.map(({ attributes, id }: IData) => ({
     ...attributes,
     id,
@@ -26,6 +28,8 @@ export const convertDataToPosts = (data: IData[]): IPost[] => {
 };
 
 export const convertDataToComments = (data: IData[]): IComment[] => {
+  if (!data) return [];
+
   const comments: IComment[] = data.map((comment: IData) => ({
     body: comment.attributes.body,
     createdAt: comment.attributes.createdAt,
@@ -37,11 +41,75 @@ export const convertDataToComments = (data: IData[]): IComment[] => {
 };
 
 export const convertDataToBookmarks = (data: IData[]): IBookmark[] => {
+  if (!data) return [];
+
   const bookmark: IBookmark[] = data.map((book) => ({
     user: book.attributes.user.data.id,
     slug: book.attributes.slug,
+    post: convertDataToPosts([book.attributes.post.data])[0],
     id: book.id,
   }));
 
   return bookmark;
+};
+
+export const beatifyDate = (date: string, time: boolean = false) => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: time ? "numeric" : undefined,
+    minute: time ? "numeric" : undefined,
+  };
+
+  return new Date(date)
+    .toLocaleDateString("ru-RU", options)
+    .split(".")
+    .join(" ")
+    .slice(0, time ? undefined : -2);
+};
+
+export const capitalizeFirstLetter = (city: string) =>
+  city
+    .split("-")
+    .map((string) => string.slice(0, 1).toUpperCase() + string.slice(1))
+    .join(" ");
+
+export const getBookmarkSlug = (user: IUser, post: IPost) => {
+  return `${user?.id}-${post.slug}`;
+};
+
+export const extendKeywords = (keywords: string) => {
+  return `${DEFAULT_KEYWORDS}, ${keywords}`;
+};
+
+export const getCityWithPagePaths = (posts: IPost[]) => {
+  const allCities = posts.map(({ city }) => city);
+  const uniqueCities = [...new Set(allCities)];
+
+  const citiesDetails = uniqueCities.map((uniqueCity) => {
+    const postsCountOfUniqueCity = allCities.filter(
+      (allCity) => allCity === uniqueCity
+    ).length;
+
+    return {
+      city: uniqueCity,
+      postsCount: postsCountOfUniqueCity,
+    };
+  });
+
+  const citiesParamsWithoutFirstPages = citiesDetails
+    .flatMap(({ city, postsCount }) => {
+      let cityParams = [];
+      const numberOfPages = Math.ceil(postsCount / POSTS_PER_PAGE);
+
+      for (let i = 0; i < numberOfPages; i++) {
+        cityParams.push({ params: { city, page_index: i + 1 + "" } });
+      }
+
+      return cityParams;
+    })
+    .filter((details) => details.params.page_index !== "1");
+
+  return citiesParamsWithoutFirstPages;
 };

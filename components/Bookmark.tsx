@@ -1,13 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
+import { IPost } from "@/models";
+import OnUnmount from "./OnUnmount";
 
 interface Props {
   jwt: string;
-  postSlug: string;
+  post: IPost;
 }
 
-function Bookmark({ jwt, postSlug }: Props) {
+function Bookmark({ jwt, post }: Props) {
   const { authStore, bookmarksStore } = useStores();
   const { user } = authStore;
   const {
@@ -18,45 +20,35 @@ function Bookmark({ jwt, postSlug }: Props) {
     deleteBookmark,
     fetchBookmark,
     resetBookmark,
+    setLoading,
   } = bookmarksStore;
 
-  const slug = `${user?.id}-${postSlug}`;
-
   useEffect(() => {
-    if (user) fetchBookmark({ jwt, slug, user });
+    if (user) fetchBookmark({ jwt, post, user });
+    if (!user) setLoading(false);
     // eslint-disable-next-line
   }, [user, reFetch]);
 
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    return () => {
-      if (firstUpdate.current) {
-        firstUpdate.current = false;
-        return;
-      }
-      resetBookmark();
-    };
-  }, [resetBookmark]);
-
   const onClick = async () => {
     if (!isLoading && !bookmark) {
-      addBookmark({ jwt, slug, user });
+      addBookmark({ jwt, post, user });
     }
     if (!isLoading && bookmark) {
       deleteBookmark({ jwt, bookmark });
     }
   };
 
+  if (!user) return <></>;
+
   return (
-    <div>
+    <div className="mb-2">
+      <OnUnmount func={resetBookmark} />
       <button
         disabled={isLoading}
-        className={`${
-          bookmark ? "bg-red-300" : "bg-blue-200"
-        } px-2 py-1 disabled:bg-black`}
+        className="shadow-md py-2 px-4 text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"
         onClick={() => onClick()}
       >
-        Bookmark
+        {bookmark ? "Удалить из закладок" : "Добавить в закладки"}
       </button>
     </div>
   );

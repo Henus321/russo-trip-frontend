@@ -1,7 +1,8 @@
+import { DEFAULT_KEYWORDS } from "@/constants";
 import Head from "next/head";
+
 import Header from "./Header";
 import Footer from "./Footer";
-import Search from "./Search";
 
 interface Props {
   title: string;
@@ -17,7 +18,7 @@ export default function Layout({
   children,
 }: Props) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen text-primary-color-alt font-roboto">
       <Head>
         <title>{title}</title>
         <meta name="keywords" content={keywords} />
@@ -25,8 +26,7 @@ export default function Layout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Search />
-      <main className="container mx-auto my-7">{children}</main>
+      <main className="container mx-auto mt-7 mb-10">{children}</main>
       <Footer />
     </div>
   );
@@ -34,6 +34,6 @@ export default function Layout({
 
 Layout.defaultProps = {
   title: "Russo Trip",
-  description: "Travel blog about Russia",
-  keywords: "travel, blog, russia, trip",
+  description: "Блог о путешествиях по России",
+  keywords: DEFAULT_KEYWORDS,
 };

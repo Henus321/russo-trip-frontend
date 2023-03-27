@@ -1,32 +1,56 @@
 import { API_URL } from "@/constants";
 import { IData, IPost } from "@/models";
 import { GetServerSideProps } from "next";
-import { marked } from "marked";
-import { convertDataToPosts, parseCookies } from "@/helpers";
+import {
+  beatifyDate,
+  capitalizeFirstLetter,
+  convertDataToPosts,
+  extendKeywords,
+  parseCookies,
+} from "@/helpers";
+import { useStores } from "@/store";
+import { observer } from "mobx-react-lite";
 import Image from "next/image";
-import Link from "next/link";
 import qs from "qs";
 
 import Layout from "@/components/Layout";
 import Comments from "@/components/Comments";
 import Bookmark from "@/components/Bookmark";
+import PageTitle from "@/components/PageTitle";
+import Loading from "@/components/Loading";
+import BackPageNavigation from "@/components/BackPageNavigation";
+import Markdown from "@/components/Markdown";
 
 interface Props {
   post: IPost;
   jwt: string;
 }
 
-export default function PostPage({ post, jwt }: Props) {
-  const { city, image, title, markdown, date, author, id, slug } = post;
+function PostPage({ post, jwt }: Props) {
+  const { city, image, title, markdown, date, author, id } = post;
+  const { authStore, bookmarksStore, commentsStore } = useStores();
+  const { isLoading: authIsLoading } = authStore;
+  const { isLoading: bookmarksIsLoading } = bookmarksStore;
+  const { isLoading: commentsIsLoading } = commentsStore;
+
+  const keywords = extendKeywords(`${title}, ${city}`);
+
+  const isLoading = authIsLoading || bookmarksIsLoading || commentsIsLoading;
+  const formattedDate = beatifyDate(date);
 
   return (
-    <Layout>
-      <Link href="/blog">Go Back</Link>
-      <h1 className="text-5xl font-bold">{title}</h1>
-      <span className="text-2xl">{city}</span>
-      <div className="relative h-96 w-full my-2">
+    <Layout title={`Russo Trip | ${title}`} keywords={keywords}>
+      {isLoading && <Loading />}
+      <BackPageNavigation />
+      <PageTitle>
+        {title}
+        <span className="text-xl font-normal">
+          {capitalizeFirstLetter(city)}
+        </span>
+      </PageTitle>
+      <div className="relative w-full h-[56rem] my-2">
         <Image
-          className="mb-2 contain object-cover"
+          className="block mb-2 object-cover"
           src={image.large}
           alt={title}
           fill
@@ -35,21 +59,18 @@ export default function PostPage({ post, jwt }: Props) {
           priority
         />
       </div>
-      <Bookmark jwt={jwt} postSlug={slug} />
-      <div className="flex flex-col w-full">
-        <div
-          className="markdown"
-          dangerouslySetInnerHTML={{ __html: marked(markdown) }}
-        ></div>
-      </div>
+      <Bookmark jwt={jwt} post={post} />
+      <Markdown markdown={markdown} />
       <div className="flex justify-between mb-2">
-        <span>{date}</span>
-        <span>Author: {author}</span>
+        <span>{formattedDate}</span>
+        <span>Автор: {capitalizeFirstLetter(author)}</span>
       </div>
       <Comments postId={id} jwt={jwt} />
     </Layout>
   );
 }
+
+export default observer(PostPage);
 
 export const getServerSideProps: GetServerSideProps = async ({
   params,
@@ -57,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const { jwt } = parseCookies(req);
 
-  const postsQuery = qs.stringify({
+  const query = qs.stringify({
     filters: {
       slug: {
         $eq: params?.slug,
@@ -68,14 +89,19 @@ export const getServerSideProps: GetServerSideProps = async ({
       image: {
         populate: "*",
       },
+      post: {
+        populate: "*",
+      },
     },
   });
 
-  const postsResponse = await fetch(`${API_URL}/api/posts?${postsQuery}`);
-  const { data }: { data: IData[] } = await postsResponse.json();
-  const post: IPost = convertDataToPosts(data)[0];
+  const response = await fetch(`${API_URL}/api/posts?${query}`);
+  const { data }: { data: IData[] } = await response.json();
+  const postArr: IPost[] = convertDataToPosts(data);
+  const post = postArr.length > 0 ? postArr[0] : null;
 
   return {
+    notFound: post ? false : true,
     props: {
       post,
       jwt,
