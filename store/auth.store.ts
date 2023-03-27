@@ -83,89 +83,116 @@ class authStore {
 
   registration = async (formData: IRegistrationForm) => {
     this.setLoading(true);
-    const response = await fetch(`${NEXT_URL}/api/registration`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch(`${NEXT_URL}/api/registration`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      this.setUser(data.user);
-      this.resetRegistrationForm();
-    } else {
-      toast.error(COMMON_ERROR_MESSAGE);
+      if (response.ok) {
+        this.setUser(data.user);
+        this.resetRegistrationForm();
+      } else {
+        toast.error(COMMON_ERROR_MESSAGE);
+      }
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
 
   login = async ({ email: identifier, password }: ILoginForm) => {
     this.setLoading(true);
-    const response = await fetch(`${NEXT_URL}/api/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ identifier, password }),
-    });
+    try {
+      const response = await fetch(`${NEXT_URL}/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ identifier, password }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      this.setUser(data.user);
-      this.resetLoginForm();
-    } else {
-      toast.error(COMMON_ERROR_MESSAGE);
+      if (response.ok) {
+        this.setUser(data.user);
+        this.resetLoginForm();
+      } else {
+        toast.error(COMMON_ERROR_MESSAGE);
+      }
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
 
   logout = async () => {
     this.setLoading(true);
-    const response = await fetch(`${NEXT_URL}/api/logout`, {
-      method: "POST",
-    });
+    try {
+      const response = await fetch(`${NEXT_URL}/api/logout`, {
+        method: "POST",
+      });
 
-    if (response.ok) {
-      this.setUser(null);
+      if (response.ok) {
+        this.setUser(null);
+      } else {
+        toast.error(COMMON_ERROR_MESSAGE);
+      }
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
 
   checkUser = async () => {
     this.setLoading(true);
-    const response = await fetch(`${NEXT_URL}/api/user`);
-    const data = await response.json();
+    try {
+      const response = await fetch(`${NEXT_URL}/api/user`);
+      const data = await response.json();
 
-    if (response.ok) {
-      this.setUser(data.user);
-    } else {
-      this.setUser(null);
+      if (response.ok) {
+        this.setUser(data.user);
+      } else {
+        this.setUser(null);
+      }
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
 
   changePassword = async (formData: IChangePasswordForm) => {
     this.setLoading(true);
-    const response = await fetch(`${NEXT_URL}/api/change-password`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...formData }),
-    });
+    try {
+      const response = await fetch(`${NEXT_URL}/api/change-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      this.setUser(data.user);
-      this.resetChangePasswordForm();
-      toast.success(COMMON_SUCCESS_MESSAGE);
-    } else {
-      toast.error(COMMON_ERROR_MESSAGE);
+      if (response.ok) {
+        this.setUser(data.user);
+        this.resetChangePasswordForm();
+        toast.success(COMMON_SUCCESS_MESSAGE);
+      } else {
+        toast.error(COMMON_ERROR_MESSAGE);
+      }
+    } catch (e) {
+      const error = e as Error;
+      toast.error(error.message);
     }
     this.setLoading(false);
   };
