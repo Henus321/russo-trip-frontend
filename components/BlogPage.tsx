@@ -2,7 +2,7 @@ import { capitalizeFirstLetter, extendKeywords } from "@/helpers";
 import { IPost } from "@/models";
 
 import Layout from "@/components/Layout";
-import Post from "@/components/Post";
+import PostItem from "@/components/PostItem";
 import CityNavigation from "@/components/CityNavigation";
 import PageTitle from "@/components/PageTitle";
 import BackPageNavigation from "@/components/BackPageNavigation";
@@ -44,7 +44,7 @@ export default function BlogPage({
           <PageTitle>{options.pageTitle}</PageTitle>
           <div className="grid gap-x-8 gap-y-10 mb-6 md:grid-cols-2">
             {posts.map((post) => (
-              <Post key={post.title} post={post} />
+              <PostItem key={post.title} post={post} />
             ))}
           </div>
         </div>

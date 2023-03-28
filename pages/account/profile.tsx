@@ -40,7 +40,7 @@ function Profile({ jwt }: Props) {
       {user && (
         <div className="flex flex-col">
           <Bookmarks jwt={jwt} />
-          <div className="flex flex-col w-1/2">
+          <div className="flex flex-col w-full md:w-1/2">
             <ChangePassword />
             <button
               className="py-2 text-xl text-white bg-primary-color hover:bg-primary-color-alt active:text-secondary-color-alt disabled:text-gray-400"

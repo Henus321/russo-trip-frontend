@@ -3,7 +3,7 @@ import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
 import { IBookmark } from "@/models";
 
-import Post from "./Post";
+import PostItem from "./PostItem";
 import OnUnmount from "./OnUnmount";
 
 interface Props {
@@ -33,16 +33,18 @@ function Bookmarks({ jwt }: Props) {
   return (
     <div className="flex flex-col mb-4">
       <OnUnmount func={resetBookmark} />
-      <h2 className="text-3xl underline mb-2">Закладки</h2>
-      <div className="grid grid-cols-4 gap-x-8 gap-y-10">
+      <h2 className="text-3xl text-center underline mb-2 sm:text-start">
+        Закладки
+      </h2>
+      <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {bookmarks &&
           bookmarks.length > 0 &&
           bookmarks.map((bookmark) => (
             <div className="relative flex mb-2" key={bookmark.slug}>
-              <Post small post={bookmark.post} />
+              <PostItem small post={bookmark.post} />
               <button
                 disabled={isLoading}
-                className="absolute top-0 right-0 bg-transparent py-1 px-3 text-2xl font-bold"
+                className="absolute top-0 right-0 bg-transparent py-3 px-6 text-2xl font-bold sm:py-1 sm:px-3"
                 onClick={() => onClick(bookmark)}
               >
                 x

@@ -6,7 +6,7 @@ import { convertDataToPosts } from "@/helpers";
 import qs from "qs";
 
 import Layout from "@/components/Layout";
-import Post from "@/components/Post";
+import PostItem from "@/components/PostItem";
 import PageTitle from "@/components/PageTitle";
 
 interface Props {
@@ -19,7 +19,7 @@ export default function HomePage({ posts }: Props) {
       <PageTitle>Последние экскурсии</PageTitle>
       <div className="grid gap-x-5 gap-y-6 mb-6 lg:grid-cols-2 xl:grid-cols-3">
         {posts.map((post, index) => (
-          <Post key={index} post={post} />
+          <PostItem key={index} post={post} />
         ))}
       </div>
       <Link

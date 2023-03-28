@@ -1,6 +1,5 @@
 import { beatifyDate, capitalizeFirstLetter } from "@/helpers";
 import { IComment } from "@/models";
-import { toJS } from "mobx";
 import { FaUserCircle } from "react-icons/fa";
 
 interface Props {
@@ -10,7 +9,7 @@ interface Props {
 export default function Comment({ comment }: Props) {
   return (
     <div className="flex items-center mb-4 bg-white py-4 px-6">
-      <span>
+      <span className="hidden sm:flex">
         <FaUserCircle className="text-4xl mr-4 mt-1 h-full" />
       </span>
       <div className="flex flex-col">

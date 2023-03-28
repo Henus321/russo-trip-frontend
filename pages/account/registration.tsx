@@ -52,7 +52,7 @@ function RegistrationPage() {
       <OnUnmount func={resetRegistrationForm} />
       {(isLoading || user) && <Loading />}
       <PageTitle>Регистрация</PageTitle>
-      <div className="flex flex-col w-1/2">
+      <div className="flex flex-col w-full md:w-1/2">
         <form
           className="flex flex-col bg-secondary-color py-6 px-4 shadow-md"
           onSubmit={onSubmit}

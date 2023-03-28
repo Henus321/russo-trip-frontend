@@ -41,7 +41,7 @@ function Bookmark({ jwt, post }: Props) {
   if (!user) return <></>;
 
   return (
-    <div className="mb-2">
+    <div className="mb-2 text-center sm:text-start">
       <OnUnmount func={resetBookmark} />
       <button
         disabled={isLoading}

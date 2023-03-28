@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
 
-import Comment from "./Comment";
+import CommentItem from "./CommentItem";
 import OnUnmount from "./OnUnmount";
 
 interface Props {
@@ -53,7 +53,10 @@ function Comments({ postId, jwt }: Props) {
       {comments &&
         comments.length > 0 &&
         comments.map((comment) => (
-          <Comment key={`${comment.id}${comment.author}`} comment={comment} />
+          <CommentItem
+            key={`${comment.id}${comment.author}`}
+            comment={comment}
+          />
         ))}
       {!commentsIsLoading && comments && comments.length === 0 && (
         <div className="flex flex-col mb-10 mt-6 mx-auto">

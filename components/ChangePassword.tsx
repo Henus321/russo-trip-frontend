@@ -26,7 +26,9 @@ function ChangePassword() {
 
   return (
     <div className="flex flex-col mb-6">
-      <h2 className="text-3xl underline mb-3">Изменить пароль</h2>
+      <h2 className="text-3xl text-center underline mb-3 sm:text-start">
+        Изменить пароль
+      </h2>
       <form
         onSubmit={onSubmit}
         className="flex flex-col bg-secondary-color py-6 px-4 shadow-md"

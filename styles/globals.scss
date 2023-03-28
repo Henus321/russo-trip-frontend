@@ -45,6 +45,11 @@ body {
     margin: 1rem 0;
     line-height: 2.3;
   }
+
+  code {
+    white-space: normal;
+    word-wrap: break-word;
+  }
 }
 
 .Toastify__toast--error,
