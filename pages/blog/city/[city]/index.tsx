@@ -4,7 +4,9 @@ import { API_URL } from "@/constants";
 import { IPost } from "@/models";
 import { convertDataToPosts } from "@/helpers";
 
-import CityBlogPage from "./page/[page_index]";
+import BlogPage from "@/components/BlogPage";
+
+export default BlogPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const response = await fetch(`${API_URL}/api/posts`);
@@ -25,4 +27,3 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export { getStaticProps };
-export default CityBlogPage;

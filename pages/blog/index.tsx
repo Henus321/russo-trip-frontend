@@ -4,7 +4,7 @@ import { API_URL, POSTS_PER_PAGE } from "@/constants";
 import { convertDataToPosts } from "@/helpers";
 import qs from "qs";
 
-import BlogPage from "@/pages/blog/page/[page_index]";
+import BlogPage from "@/components/BlogPage";
 
 export default BlogPage;
 
@@ -30,6 +30,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const allCities = posts.map(({ city }) => city);
   const uniqueCities = [...new Set(allCities)];
+  const curCityName = null;
 
   const numberOfPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const currentPage = 1;
@@ -38,6 +39,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
+      cityName: curCityName,
       cities: uniqueCities,
       posts: orderedPosts,
       currentPage,

@@ -48,24 +48,25 @@ function PostPage({ post, jwt }: Props) {
           {capitalizeFirstLetter(city)}
         </span>
       </PageTitle>
-      <div className="relative w-full h-[56rem] my-2">
-        <Image
-          className="block mb-2 object-cover"
-          src={image.large}
-          alt={title}
-          fill
-          // TEMPORARY
-          sizes="100%"
-          priority
-        />
+      <div className="flex flex-col px-4 mb-6 sm:px-0 sm:mb-0">
+        <div className="relative w-full mt-2 mb-4 h-[12rem] sm:h-[16rem] md:h-[20rem] lg:h-[30rem] xl:h-[38rem] 2xl:h-[46rem]">
+          <Image
+            className="block object-cover"
+            src={image.large}
+            alt={title}
+            fill
+            sizes="100%"
+            priority
+          />
+        </div>
+        <Bookmark jwt={jwt} post={post} />
+        <Markdown markdown={markdown} />
+        <div className="flex justify-between mb-2">
+          <span>{formattedDate}</span>
+          <span>Автор: {capitalizeFirstLetter(author)}</span>
+        </div>
+        <Comments postId={id} jwt={jwt} />
       </div>
-      <Bookmark jwt={jwt} post={post} />
-      <Markdown markdown={markdown} />
-      <div className="flex justify-between mb-2">
-        <span>{formattedDate}</span>
-        <span>Автор: {capitalizeFirstLetter(author)}</span>
-      </div>
-      <Comments postId={id} jwt={jwt} />
     </Layout>
   );
 }

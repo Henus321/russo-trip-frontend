@@ -1,13 +1,13 @@
 import Layout from "@/components/Layout";
 import PageTitle from "@/components/PageTitle";
-import HomePageNavigation from "@/components/HomePageNavigation";
+import BackPageNavigation from "@/components/BackPageNavigation";
 
 export default function AboutPage() {
   return (
     <Layout title="Russo Trip | О нас">
-      <HomePageNavigation />
+      <BackPageNavigation home />
       <PageTitle>О нас</PageTitle>
-      <p className="text-justify">
+      <p className="text-justify px-6 md:px-4">
         Не следует, однако, забывать, что современная методология разработки
         однозначно фиксирует необходимость вывода текущих активов. Но некоторые
         особенности внутренней политики набирают популярность среди определенных

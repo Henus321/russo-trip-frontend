@@ -4,12 +4,14 @@ interface Props {
   currentPage: number;
   numberOfPages: number;
   path: string;
+  className?: string;
 }
 
 export default function Pagination({
   currentPage,
   numberOfPages,
   path,
+  className = "",
 }: Props) {
   const isPageFirst = currentPage === 1;
   const isPageLast = currentPage === numberOfPages;
@@ -39,8 +41,8 @@ export default function Pagination({
       : "bg-secondary-color-alt text-primary-color";
 
   return (
-    <div>
-      <ul className="flex list-none my-2">
+    <div className={className}>
+      <ul className="flex list-none">
         <li>
           <button
             disabled={isPageFirst}

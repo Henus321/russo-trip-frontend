@@ -1,11 +1,11 @@
-import HomePageNavigation from "@/components/HomePageNavigation";
+import BackPageNavigation from "@/components/BackPageNavigation";
 import Layout from "@/components/Layout";
 import PageTitle from "@/components/PageTitle";
 
 export default function NotFoundPage() {
   return (
     <Layout title="Russo Trip | Страница не найдена">
-      <HomePageNavigation />
+      <BackPageNavigation home />
       <PageTitle>Страница не найдена</PageTitle>
       <div className="text-center my-40">
         <h2 className="text-8xl mb-2">404</h2>
