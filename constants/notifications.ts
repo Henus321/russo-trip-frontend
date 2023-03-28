@@ -8,6 +8,4 @@ export const NOT_AUTHORIZED_MESSAGE = "Вы не авторизованы!";
 
 export const NO_TOKEN_MESSAGE = "Нет JWT токена!";
 
-export const FAIL_FETCH_MESSAGE = "Ошибка извлечения данных!";
-
 export const EMPTY_MESSAGE = "Комментарий пуст, пожалуйста напишите что-нибудь";

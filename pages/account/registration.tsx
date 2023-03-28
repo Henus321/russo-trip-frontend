@@ -1,27 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStores } from "@/store";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { PASSWORD_MATCH_MESSAGE } from "@/constants";
+import { IRegistrationForm } from "@/models";
 import Link from "next/link";
 
 import Layout from "@/components/Layout";
 import PageTitle from "@/components/PageTitle";
 import Loading from "@/components/Loading";
-import OnUnmount from "@/components/OnUnmount";
+
+const initialFormData: IRegistrationForm = {
+  username: "",
+  email: "",
+  password: "",
+  passwordConfirm: "",
+};
 
 function RegistrationPage() {
   const { authStore } = useStores();
-  const {
-    user,
-    registrationForm,
-    isLoading,
-    setRegistrationForm,
-    registration,
-    resetRegistrationForm,
-  } = authStore;
+  const { user, isLoading, registration } = authStore;
 
+  const [registrationForm, setRegistrationForm] = useState(initialFormData);
   const { username, email, password, passwordConfirm } = registrationForm;
 
   const router = useRouter();
@@ -45,11 +46,11 @@ function RegistrationPage() {
     }
 
     registration(registrationForm);
+    setRegistrationForm(initialFormData);
   };
 
   return (
     <Layout title="Russo Trip | Регистрация">
-      <OnUnmount func={resetRegistrationForm} />
       {(isLoading || user) && <Loading />}
       <PageTitle>Регистрация</PageTitle>
       <div className="flex flex-col w-full md:w-1/2">

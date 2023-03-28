@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
 
@@ -16,13 +16,12 @@ function Comments({ postId, jwt }: Props) {
   const {
     comments,
     reFetch,
-    commentMessage,
     isLoading: commentsIsLoading,
-    setCommentMessage,
     fetchComments,
     addComment,
     resetComments,
   } = commentsStore;
+  const [commentMessage, setCommentMessage] = useState("");
 
   useEffect(() => {
     fetchComments(postId);
@@ -32,6 +31,7 @@ function Comments({ postId, jwt }: Props) {
     e.preventDefault();
 
     addComment(commentMessage, postId, jwt);
+    setCommentMessage("");
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>

@@ -2,12 +2,7 @@ import { IData, INewBookmark, IBookmark, IUser } from "@/models";
 import { makeAutoObservable } from "mobx";
 import { toast } from "react-toastify";
 import { RootStore } from ".";
-import {
-  API_URL,
-  COMMON_ERROR_MESSAGE,
-  NOT_AUTHORIZED_MESSAGE,
-  NO_TOKEN_MESSAGE,
-} from "@/constants";
+import { API_URL, NOT_AUTHORIZED_MESSAGE, NO_TOKEN_MESSAGE } from "@/constants";
 import { convertDataToBookmarks, getBookmarkSlug } from "@/helpers";
 import qs from "qs";
 
@@ -79,14 +74,14 @@ class bookmarksStore {
           },
         }
       );
-
-      const { data }: { data: IData[] } = await response.json();
+      const { data, message }: { data: IData[]; message: string } =
+        await response.json();
 
       if (!response.ok) {
         if (response.status === 403 || response.status === 401) {
           toast.error(NO_TOKEN_MESSAGE);
         } else {
-          toast.error(COMMON_ERROR_MESSAGE);
+          toast.error(message);
         }
       } else {
         const book = convertDataToBookmarks(data)[0];
@@ -137,13 +132,14 @@ class bookmarksStore {
           },
         }
       );
-      const { data }: { data: IData[] } = await response.json();
+      const { data, message }: { data: IData[]; message: string } =
+        await response.json();
 
       if (!response.ok) {
         if (response.status === 403 || response.status === 401) {
           toast.error(NO_TOKEN_MESSAGE);
         } else {
-          toast.error(COMMON_ERROR_MESSAGE);
+          toast.error(message);
         }
       } else {
         const books = convertDataToBookmarks(data);
@@ -180,12 +176,13 @@ class bookmarksStore {
           },
         }),
       });
+      const { message }: { message: string } = await response.json();
 
       if (!response.ok) {
         if (response.status === 403 || response.status === 401) {
           toast.error(NO_TOKEN_MESSAGE);
         } else {
-          toast.error(COMMON_ERROR_MESSAGE);
+          toast.error(message);
         }
       } else {
         this.setFetch(!this.reFetch);
@@ -217,12 +214,13 @@ class bookmarksStore {
           Authorization: `Bearer ${jwt}`,
         },
       });
+      const { message }: { message: string } = await response.json();
 
       if (!response.ok) {
         if (response.status === 403 || response.status === 401) {
           toast.error(NO_TOKEN_MESSAGE);
         } else {
-          toast.error(COMMON_ERROR_MESSAGE);
+          toast.error(message);
         }
       } else {
         this.setFetch(!this.reFetch);

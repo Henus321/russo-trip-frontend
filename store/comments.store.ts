@@ -1,9 +1,7 @@
 import {
   API_URL,
-  COMMON_ERROR_MESSAGE,
   NOT_AUTHORIZED_MESSAGE,
   NO_TOKEN_MESSAGE,
-  FAIL_FETCH_MESSAGE,
   EMPTY_MESSAGE,
 } from "@/constants";
 import { convertDataToComments } from "@/helpers";
@@ -17,7 +15,6 @@ class commentsStore {
   rootStore: RootStore;
 
   comments: IComment[] | null = null;
-  commentMessage: string = "";
   reFetch: boolean = false;
   isLoading: boolean = false;
 
@@ -28,10 +25,6 @@ class commentsStore {
 
   setComments = (comments: IComment[]) => {
     this.comments = comments;
-  };
-
-  setCommentMessage = (message: string) => {
-    this.commentMessage = message;
   };
 
   setFetch = (status: boolean) => {
@@ -61,13 +54,14 @@ class commentsStore {
         sort: ["createdAt:desc"],
       });
       const response = await fetch(`${API_URL}/api/comments?${commentsQuery}`);
-      const { data }: { data: IData[] } = await response.json();
+      const { data, message }: { data: IData[]; message: string } =
+        await response.json();
 
       if (response.ok) {
         const comments: IComment[] = convertDataToComments(data);
         this.setComments(comments);
       } else {
-        toast.error(FAIL_FETCH_MESSAGE);
+        toast.error(message);
       }
     } catch (e) {
       const error = e as Error;
@@ -102,16 +96,16 @@ class commentsStore {
         },
         body: JSON.stringify({ data: commentData }),
       });
+      const { message }: { message: string } = await response.json();
 
       if (!response.ok) {
         if (response.status === 403 || response.status === 401) {
           toast.error(NO_TOKEN_MESSAGE);
         } else {
-          toast.error(COMMON_ERROR_MESSAGE);
+          toast.error(message);
         }
       } else {
         this.setFetch(!this.reFetch);
-        this.setCommentMessage("");
       }
     } catch (e) {
       const error = e as Error;
