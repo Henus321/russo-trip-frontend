@@ -1,6 +1,4 @@
-import { capitalizeFirstLetter } from "@/helpers";
-import Link from "next/link";
-import React from "react";
+import CityNavigationItem from "./CityNavigationItem";
 
 interface Props {
   cities: string[];
@@ -8,21 +6,18 @@ interface Props {
 
 export default function CityNavigation({ cities }: Props) {
   return (
-    <div className="w-full py-6 px-10 text-xl bg-secondary-color shadow-md">
-      <h2 className="text-2xl font-bold mb-2 underline">Поиск по городам</h2>
-      <ul className="flex flex-col ">
-        <li className="mb-1 hover:text-slate-600 active:text-primary-color-alt">
-          <Link href="/blog">Все города</Link>
-        </li>
+    <div className="w-full px-4 text-center bg-white whitespace-nowrap lg:text-start lg:whitespace-normal lg:px-10 lg:py-6 lg:shadow-md lg:bg-secondary-color">
+      <h2 className="text-2xl font-bold mb-1 underline sm:mb-2">
+        Поиск по городам
+      </h2>
+      <ul className="flex flex-row flex-wrap justify-center text-sm md:text-xl lg:flex-col">
+        <CityNavigationItem city="Все города" href="/blog" />
         {cities.map((city) => (
-          <li
-            className="mb-1 hover:text-slate-600 active:text-primary-color-alt"
+          <CityNavigationItem
             key={city}
-          >
-            <Link href={`/blog/city/${city.toLowerCase()}`}>
-              {capitalizeFirstLetter(city)}
-            </Link>
-          </li>
+            city={city}
+            href={`/blog/city/${city.toLowerCase()}`}
+          />
         ))}
       </ul>
     </div>

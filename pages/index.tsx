@@ -17,7 +17,7 @@ export default function HomePage({ posts }: Props) {
   return (
     <Layout title="Russo Trip | Главная">
       <PageTitle>Последние экскурсии</PageTitle>
-      <div className="grid grid-cols-3 gap-x-5 gap-y-6 mb-6">
+      <div className="grid gap-x-5 gap-y-6 mb-6 lg:grid-cols-2 xl:grid-cols-3">
         {posts.map((post, index) => (
           <Post key={index} post={post} />
         ))}

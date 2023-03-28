@@ -10,10 +10,10 @@ function Header() {
 
   return (
     <header className="bg-primary-color text-white shadow w-full">
-      <div className="container mx-auto flex flex-row p-5 items-center justify-between">
-        <div className="flex items-center justify-between">
-          <Link className="flex items-center mr-8" href="/">
-            <h2 className="mb-1 text-4xl font-robotoSlab tracking-wide whitespace-nowrap hover:text-secondary-color-alt">
+      <div className="container mx-auto flex flex-col p-3 items-center justify-between lg:flex-row sm:p-5">
+        <div className="flex flex-col items-center justify-between sm:flex-row">
+          <Link className="flex items-center mr-0 sm:mr-8" href="/">
+            <h2 className="mb-2 text-4xl font-robotoSlab tracking-wide whitespace-nowrap hover:text-secondary-color-alt sm:mb-1">
               Russo Trip
             </h2>
           </Link>
