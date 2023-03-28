@@ -19,7 +19,7 @@ function Bookmarks({ jwt }: Props) {
     reFetch,
     deleteBookmark,
     fetchBookmarks,
-    resetBookmark,
+    resetBookmarks,
   } = bookmarksStore;
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function Bookmarks({ jwt }: Props) {
 
   return (
     <div className="flex flex-col mb-4">
-      <OnUnmount func={resetBookmark} />
+      <OnUnmount func={resetBookmarks} />
       <h2 className="text-3xl text-center underline mb-2 sm:text-start">
         Закладки
       </h2>

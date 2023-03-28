@@ -1,19 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
+import { ILoginForm } from "@/models";
 import Link from "next/link";
 
 import Layout from "@/components/Layout";
 import PageTitle from "@/components/PageTitle";
 import Loading from "@/components/Loading";
-import OnUnmount from "@/components/OnUnmount";
+
+const initialFormData: ILoginForm = {
+  email: "",
+  password: "",
+};
 
 function LoginPage() {
   const { authStore } = useStores();
-  const { user, loginForm, isLoading, setLoginForm, login, resetLoginForm } =
-    authStore;
+  const { user, isLoading, login } = authStore;
 
+  const [loginForm, setLoginForm] = useState(initialFormData);
   const { email, password } = loginForm;
 
   const router = useRouter();
@@ -32,11 +37,11 @@ function LoginPage() {
     e.preventDefault();
 
     login(loginForm);
+    setLoginForm(initialFormData);
   };
 
   return (
     <Layout title="Russo Trip | Вход">
-      <OnUnmount func={resetLoginForm} />
       {(isLoading || user) && <Loading />}
       <PageTitle>Вход</PageTitle>
       <div className="flex flex-col w-full md:w-1/2">

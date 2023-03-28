@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { useStores } from "@/store";
 import { observer } from "mobx-react-lite";
+import { IChangePasswordForm } from "@/models";
+
+const initialFormData: IChangePasswordForm = {
+  currentPassword: "",
+  password: "",
+  passwordConfirmation: "",
+};
 
 function ChangePassword() {
   const { authStore } = useStores();
-  const {
-    isLoading,
-    changePasswordForm,
-    setChangePasswordForm,
-    changePassword,
-  } = authStore;
+  const { isLoading, changePassword } = authStore;
+
+  const [changePasswordForm, setChangePasswordForm] = useState(initialFormData);
   const { currentPassword, password, passwordConfirmation } =
     changePasswordForm;
 
@@ -22,6 +27,7 @@ function ChangePassword() {
     e.preventDefault();
 
     changePassword(changePasswordForm);
+    setChangePasswordForm(initialFormData);
   };
 
   return (

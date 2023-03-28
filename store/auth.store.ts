@@ -1,8 +1,4 @@
-import {
-  COMMON_ERROR_MESSAGE,
-  COMMON_SUCCESS_MESSAGE,
-  NEXT_URL,
-} from "@/constants";
+import { COMMON_SUCCESS_MESSAGE, NEXT_URL } from "@/constants";
 import {
   IChangePasswordForm,
   ILoginForm,
@@ -19,22 +15,6 @@ class authStore {
   user: IUser | null = null;
   isLoading: boolean = true;
 
-  registrationForm: IRegistrationForm = {
-    username: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
-  };
-  loginForm: ILoginForm = {
-    email: "",
-    password: "",
-  };
-  changePasswordForm: IChangePasswordForm = {
-    currentPassword: "",
-    password: "",
-    passwordConfirmation: "",
-  };
-
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
@@ -46,39 +26,6 @@ class authStore {
 
   setLoading = (status: boolean) => {
     this.isLoading = status;
-  };
-
-  setRegistrationForm = (formData: IRegistrationForm) => {
-    this.registrationForm = { ...formData };
-  };
-  resetRegistrationForm = () => {
-    this.registrationForm = {
-      username: "",
-      email: "",
-      password: "",
-      passwordConfirm: "",
-    };
-  };
-
-  setLoginForm = (formData: ILoginForm) => {
-    this.loginForm = { ...formData };
-  };
-  resetLoginForm = () => {
-    this.loginForm = {
-      email: "",
-      password: "",
-    };
-  };
-
-  setChangePasswordForm = (formData: IChangePasswordForm) => {
-    this.changePasswordForm = { ...formData };
-  };
-  resetChangePasswordForm = () => {
-    this.changePasswordForm = {
-      currentPassword: "",
-      password: "",
-      passwordConfirmation: "",
-    };
   };
 
   registration = async (formData: IRegistrationForm) => {
@@ -96,9 +43,8 @@ class authStore {
 
       if (response.ok) {
         this.setUser(data.user);
-        this.resetRegistrationForm();
       } else {
-        toast.error(COMMON_ERROR_MESSAGE);
+        toast.error(data.message);
       }
     } catch (e) {
       const error = e as Error;
@@ -122,9 +68,8 @@ class authStore {
 
       if (response.ok) {
         this.setUser(data.user);
-        this.resetLoginForm();
       } else {
-        toast.error(COMMON_ERROR_MESSAGE);
+        toast.error(data.message);
       }
     } catch (e) {
       const error = e as Error;
@@ -140,10 +85,12 @@ class authStore {
         method: "POST",
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         this.setUser(null);
       } else {
-        toast.error(COMMON_ERROR_MESSAGE);
+        toast.error(data.message);
       }
     } catch (e) {
       const error = e as Error;
@@ -185,10 +132,9 @@ class authStore {
 
       if (response.ok) {
         this.setUser(data.user);
-        this.resetChangePasswordForm();
         toast.success(COMMON_SUCCESS_MESSAGE);
       } else {
-        toast.error(COMMON_ERROR_MESSAGE);
+        toast.error(data.message);
       }
     } catch (e) {
       const error = e as Error;
