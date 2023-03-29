@@ -1,4 +1,4 @@
-import { beatifyDate, capitalizeFirstLetter } from "@/helpers";
+import { beatifyDate } from "@/helpers";
 import { IComment } from "@/models";
 import { FaUserCircle } from "react-icons/fa";
 
@@ -14,9 +14,7 @@ export default function Comment({ comment }: Props) {
       </span>
       <div className="flex flex-col">
         <div className="flex mb-2">
-          <span className="underline">
-            {capitalizeFirstLetter(comment.author)}
-          </span>
+          <span className="underline">{comment.author}</span>
           <span className="mx-2">-</span>
           <span>{beatifyDate(comment.createdAt, true)}</span>
         </div>

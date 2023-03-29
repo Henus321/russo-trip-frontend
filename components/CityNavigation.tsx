@@ -11,7 +11,7 @@ export default function CityNavigation({ cities }: Props) {
         Поиск по городам
       </h2>
       <ul className="flex flex-row flex-wrap justify-center text-sm md:text-xl lg:flex-col">
-        <CityNavigationItem city="Все города" href="/blog" />
+        <CityNavigationItem city="Все" href="/blog" />
         {cities.map((city) => (
           <CityNavigationItem
             key={city}

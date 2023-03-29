@@ -1,6 +1,6 @@
 import { API_URL, POSTS_PER_PAGE } from "@/constants";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { convertDataToPosts, getCityWithPagePaths } from "@/helpers";
+import { convertDataToPosts } from "@/helpers";
 import { IPost } from "@/models";
 import qs from "qs";
 
@@ -14,10 +14,35 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const posts: IPost[] = convertDataToPosts(data);
 
-  const paths = getCityWithPagePaths(posts);
+  const allCities = posts.map(({ city }) => city);
+  const uniqueCities = [...new Set(allCities)];
+
+  const citiesDetails = uniqueCities.map((uniqueCity) => {
+    const postsCountOfUniqueCity = allCities.filter(
+      (allCity) => allCity === uniqueCity
+    ).length;
+
+    return {
+      city: uniqueCity,
+      postsCount: postsCountOfUniqueCity,
+    };
+  });
+
+  const citiesPathsWithoutFirstPages = citiesDetails
+    .flatMap(({ city, postsCount }) => {
+      let cityParams = [];
+      const numberOfPages = Math.ceil(postsCount / POSTS_PER_PAGE);
+
+      for (let i = 0; i < numberOfPages; i++) {
+        cityParams.push({ params: { city, page_index: i + 1 + "" } });
+      }
+
+      return cityParams;
+    })
+    .filter((details) => details.params.page_index !== "1");
 
   return {
-    paths,
+    paths: citiesPathsWithoutFirstPages,
     fallback: false,
   };
 };

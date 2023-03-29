@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from "@/helpers";
+import { capitalizeText } from "@/helpers";
 import Link from "next/link";
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function CityNavigationItem({ city, href }: Props) {
-  const formattedCity = capitalizeFirstLetter(city);
+  const formattedCity = capitalizeText(city, true);
 
   return (
     <li className="hover:text-slate-600 active:text-primary-color-alt">
