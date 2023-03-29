@@ -42,7 +42,7 @@ class commentsStore {
   fetchComments = async (postId: number) => {
     this.setLoading(true);
     try {
-      const commentsQuery = qs.stringify({
+      const query = qs.stringify({
         populate: "*",
         filters: {
           post: {
@@ -53,7 +53,7 @@ class commentsStore {
         },
         sort: ["createdAt:desc"],
       });
-      const response = await fetch(`${API_URL}/api/comments?${commentsQuery}`);
+      const response = await fetch(`${API_URL}/api/comments?${query}`);
       const { data, message }: { data: IData[]; message: string } =
         await response.json();
 
@@ -83,7 +83,7 @@ class commentsStore {
 
     this.setLoading(true);
     try {
-      const commentData: INewComment = {
+      const data: INewComment = {
         body: comment,
         post: postId,
       };
@@ -94,7 +94,7 @@ class commentsStore {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify({ data: commentData }),
+        body: JSON.stringify({ data }),
       });
       const { message }: { message: string } = await response.json();
 

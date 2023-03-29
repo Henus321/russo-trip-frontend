@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter, extendKeywords } from "@/helpers";
+import { capitalizeText, extendKeywords } from "@/helpers";
 import { IPost } from "@/models";
 
 import Layout from "@/components/Layout";
@@ -25,13 +25,13 @@ export default function BlogPage({
 }: Props) {
   const options = {
     title: cityName
-      ? `Russo Trip | ${capitalizeFirstLetter(cityName)}`
+      ? `Russo Trip | ${capitalizeText(cityName, true)}`
       : "Russo Trip | Экскурсии",
     keywords: cityName
       ? extendKeywords(cityName)
       : extendKeywords(cities.join(", ")),
     pageTitle: cityName
-      ? `Экскурсии / ${capitalizeFirstLetter(cityName)}`
+      ? `Экскурсии / ${capitalizeText(cityName, true)}`
       : "Экскурсии",
     path: cityName ? `/blog/city/${cityName}` : "/blog",
   };
