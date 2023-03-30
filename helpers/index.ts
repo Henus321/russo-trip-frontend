@@ -1,4 +1,4 @@
-import { API_URL, DEFAULT_KEYWORDS, POSTS_PER_PAGE } from "@/constants";
+import {  DEFAULT_KEYWORDS } from "@/constants";
 import { IBookmark, IComment, IData, IPost, IUser } from "@/models";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
@@ -17,10 +17,10 @@ export const convertDataToPosts = (data: IData[]): IPost[] => {
     id,
     author: attributes.user?.data.attributes.username,
     image: {
-      thumbnail: `${API_URL}${attributes.image?.data.attributes.formats.thumbnail.url}`,
-      small: `${API_URL}${attributes.image?.data.attributes.formats.small.url}`,
-      medium: `${API_URL}${attributes.image?.data.attributes.formats.medium.url}`,
-      large: `${API_URL}${attributes.image?.data.attributes.formats.large.url}`,
+      thumbnail: attributes.image?.data.attributes.formats.thumbnail.url,
+      small: attributes.image?.data.attributes.formats.small.url,
+      medium: attributes.image?.data.attributes.formats.medium.url,
+      large: attributes.image?.data.attributes.formats.large.url,
     },
   }));
 

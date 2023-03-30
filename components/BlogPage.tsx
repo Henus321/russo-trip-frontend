@@ -38,7 +38,7 @@ export default function BlogPage({
 
   return (
     <Layout title={options.title} keywords={options.keywords}>
-      <BackPageNavigation />
+      <BackPageNavigation home />
       <div className="flex flex-col-reverse justify-between lg:flex-row">
         <div className="w-full mr-10 lg:w-3/4">
           <PageTitle>{options.pageTitle}</PageTitle>

@@ -55,7 +55,7 @@ function Search() {
       >
         <input
           type="search"
-          className="bg-white text-primary-color-alt h-10 pl-3 pr-10 text-sm focus:outline-none w-full lg:w-80"
+          className="bg-white text-primary-color-alt h-10 pl-3 pr-10 focus:outline-none w-full lg:w-80"
           placeholder="Поиск по экскурсиям..."
           onChange={(e) => onChange(e)}
           value={searchTerm}
