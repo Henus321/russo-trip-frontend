@@ -1,4 +1,4 @@
-import {  DEFAULT_KEYWORDS } from "@/constants";
+import { DEFAULT_KEYWORDS } from "@/constants";
 import { IBookmark, IComment, IData, IPost, IUser } from "@/models";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
@@ -53,21 +53,13 @@ export const convertDataToBookmarks = (data: IData[]): IBookmark[] => {
   return bookmark;
 };
 
-export const beatifyDate = (date: string, time: boolean = false) => {
-  const options: Intl.DateTimeFormatOptions = {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: time ? "numeric" : undefined,
-    minute: time ? "numeric" : undefined,
-  };
-
-  return new Date(date)
-    .toLocaleDateString("ru-RU", options)
-    .split(".")
+export const beatifyDate = (date: string, time: boolean = false) =>
+  date
+    .split("-")
     .join(" ")
-    .slice(0, time ? undefined : -2);
-};
+    .split("T")
+    .join(" в ")
+    .slice(0, time ? 18 : 10);
 
 export const capitalizeText = (text: string, isCity = false) =>
   text
