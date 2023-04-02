@@ -65,10 +65,10 @@ function Search() {
       {searchResult && (
         <div
           onMouseDown={(e) => onPreventBlur(e)}
-          className="absolute top-10 right-0 min-h-[8rem] w-full flex flex-col bg-secondary-color-alt text-primary-color lg:w-[200%]"
+          className="absolute top-10 right-0 min-h-[10rem] max-h-[70vh] overflow-y-auto w-full flex flex-col bg-secondary-color-alt text-primary-color z-30 lg:w-[200%]"
         >
           {isLoading && (
-            <div className="absolute flex justify-center items-center w-full h-full bg-slate-900/40 z-30">
+            <div className="absolute flex justify-center items-center w-full h-full bg-slate-900/40">
               <Spinner className="h-24 w-24" />
             </div>
           )}
