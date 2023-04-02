@@ -53,13 +53,42 @@ export const convertDataToBookmarks = (data: IData[]): IBookmark[] => {
   return bookmark;
 };
 
-export const beatifyDate = (date: string, time: boolean = false) =>
-  date
-    .split("-")
-    .join(" ")
-    .split("T")
-    .join(" в ")
-    .slice(0, time ? 18 : 10);
+export const convertMonth = (month: number) => {
+  const months = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря",
+  ];
+
+  return months[month - 1];
+};
+
+export const beatifyDate = (date: string, dateWithTime: boolean = false) => {
+  const clearDate = date.slice(0, 10).split("-");
+
+  const year = clearDate[0];
+  const month = convertMonth(+clearDate[1]);
+  const day = clearDate[2];
+
+  const beatifulDate = `${day} ${month} ${year}`;
+
+  if (dateWithTime) {
+    const time = date.split("T")[1].slice(0, 5);
+
+    return beatifulDate + " в " + time;
+  }
+
+  return beatifulDate;
+};
 
 export const capitalizeText = (text: string, isCity = false) =>
   text
