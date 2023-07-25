@@ -28,7 +28,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { data }: { data: IData[] } = await response.json();
   const posts: IPost[] = convertDataToPosts(data);
 
-  const numberOfPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const currentPage = parseInt(
     query && query.page ? query.page.toString() : "1"
   );
@@ -46,6 +45,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     pageIndex * POSTS_PER_PAGE,
     (pageIndex + 1) * POSTS_PER_PAGE
   );
+  const numberOfPages = Math.ceil(cityPosts.length / POSTS_PER_PAGE);
 
   return {
     props: {
