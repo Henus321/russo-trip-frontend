@@ -54,7 +54,7 @@ export default function BlogPage({
       </div>
       <Pagination
         className="mt-0 mb-6 sm:mt-2 sm:mb-0"
-        path={options.path}
+        city={cityName}
         currentPage={currentPage}
         numberOfPages={numberOfPages}
       />
