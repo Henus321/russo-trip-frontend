@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { IData, IPost } from "@/models";
 import { API_URL, POSTS_PER_PAGE } from "@/constants";
 import { convertDataToPosts } from "@/helpers";
@@ -8,8 +8,8 @@ import BlogPage from "@/components/BlogPage";
 
 export default BlogPage;
 
-export const getStaticProps: GetStaticProps = async () => {
-  const query = qs.stringify({
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const apiQuery = qs.stringify({
     sort: {
       date: "desc",
     },
@@ -24,18 +24,28 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   });
 
-  const response = await fetch(`${API_URL}/api/posts?${query}`);
+  const response = await fetch(`${API_URL}/api/posts?${apiQuery}`);
   const { data }: { data: IData[] } = await response.json();
   const posts: IPost[] = convertDataToPosts(data);
 
+  const currentPage = parseInt(
+    query && query.page ? query.page.toString() : "1"
+  );
+  const pageIndex = currentPage - 1;
+
   const allCities = posts.map(({ city }) => city);
   const uniqueCities = [...new Set(allCities)];
-  const curCityName = null;
+  const curCityName = query && query.city ? query.city : null;
 
-  const numberOfPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-  const currentPage = 1;
+  const cityPosts = curCityName
+    ? posts.filter((post) => post.city === curCityName)
+    : posts;
 
-  const orderedPosts = posts.slice(0, POSTS_PER_PAGE);
+  const orderedPosts = cityPosts.slice(
+    pageIndex * POSTS_PER_PAGE,
+    (pageIndex + 1) * POSTS_PER_PAGE
+  );
+  const numberOfPages = Math.ceil(cityPosts.length / POSTS_PER_PAGE);
 
   return {
     props: {
